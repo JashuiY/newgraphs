@@ -1,0 +1,2697 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="all.js"></script>
+  <title>INDICADORES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    :root{
+      --ancho: 75%;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: white;
+      color: white;
+      padding: 20px 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+    }
+    body { 
+      font-family: sans-serif; 
+      padding: 20px; 
+      background: #f8f8f8; 
+    }
+    .contenedor {
+      display: flex;
+      gap: 20px; /* Espacio entre gráficos */
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      width: var(--ancho);
+      align-items: center;
+    }
+    .contenedor_vertical {
+      display: flex;
+      gap: 20px; /* Espacio entre gráficos */
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+      width: var(--ancho);
+      align-items: center;
+    }
+    .contenedor_2 {
+      display: flex;
+      gap: 20px; /* Espacio entre gráficos */
+      margin-bottom: 20px;
+      /*margin-left: auto;*/
+      margin-right: auto;
+      width: 50%;
+      align-items: center;
+    }
+    .contenedor_3 {
+      display: flex;
+      gap: 10px; /* Espacio entre gráficos */
+      margin-bottom: 2px;
+      margin-left: auto;
+      margin-right: auto;
+      width: var(--ancho);
+      align-items: center;
+    }
+    .grafica {
+      flex: 1;
+      /*height: 500px;*/
+    }
+    #mapa {
+      flex: 1;
+      max-width: 60%;
+    }
+    #desempeños {
+      flex: 1;
+      /*width: 100%;*/
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      /*overflow: hidden;*/
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #ranking_1N, #ranking_2N{
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #ranking2, #ranking2-2{
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #ranking2 .hovertext text{ 
+      /*
+      transform-origin: center;*/
+      transform: translate(10px);
+      transform: rotate(-60deg); 
+    }
+    #indicadores_1 {
+      height: 700px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      /*overflow: hidden;*/
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #indicadores_2 {
+      height: 650px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      /*overflow: hidden;*/
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-unidad{
+      min-width: 40px;
+      width: 110px;/*130px;*/
+      height: 40px;
+      padding: 5px 5px;
+      border: none;
+      border-radius: 6px;
+      background-color: #FFFFFF;/*#FF9800; F0F0F0 */
+      color: black;
+      box-shadow: 0 5px 0 #f0f0f0, 0 8px 10px rgba(0, 0, 0, 0.2); /*F57C00 - D0F2E1 10312B 006657*/
+      position: relative;
+      top: 0;
+      transition: all 0.1s;
+      font-weight: bold;
+      font-size: 12px;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      line-height: 1.1;
+    }
+    .btn-unidad:hover{
+      background-color: #006657;/*#FB8C00; 10312B */
+      color: white;
+      transform: translateY(-3px);
+    }
+    .btn-unidad:active{
+      top: 3px;
+    }
+    .btn-unidad.activo {
+      background-color: #006657 !important;/*149985 10312B */
+      color: white;
+      transform: translateY(3px);
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.2);
+      font-weight: 600;
+    }
+
+    #loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      display: none;
+    }
+    .loader {
+      border: 10px solid #f3f3f3;
+      border-top: 10px solid #006657;/*#FF9800;*/
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .calendario {
+      grid-row: 1;    /* Fila 1 */
+      grid-column: 1; /* Columna 1 */
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+      overflow: hidden;
+      /*height: 70%;*/
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0px;
+      margin-top: auto;
+    }
+    .calendario-encabezado {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .año-actual {
+      font-weight: 1000;
+      font-size: 22px;
+      color: #10312B;/*333   006657*/
+      letter-spacing: 0.5px;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      color: #006657;/*555 10312B*/
+    }
+    .nav-btn:hover {
+      background: rgba(76, 175, 80, 0.1);
+      color: #0C917D;/*4CAF50*/
+      transform: scale(1.1);
+    }
+    .month-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .month-btn {
+      padding: 8px 8px;
+      border: none;
+      background: rgba(0,0,0,0.03);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 500;
+      color: #10312B;/*444*/
+      position: relative;
+      overflow: hidden;
+    }
+    .month-btn:hover {
+      background: rgba(64, 184, 166, 0.1);/*rgba(76, 175, 80, 0.1);*/
+      color: #2E7D32;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(76, 175, 80, 0.15);
+    }
+    .month-btn.selected {
+      background: #006657;/*4CAF50*/
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+    .month-btn.selected::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 3px;
+      background: white;
+      border-radius: 3px 3px 0 0;
+    }
+    .month-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .selected-display {
+      background: rgba(0, 178, 152,0.25);/*rgba(208, 184, 166, 0.1);rgba(76, 175, 80, 0.08)*/
+      padding: 8px 15px;
+      border-radius: 12px;
+      text-align: left;
+      vertical-align: center;
+      font-size: 22px;
+      color: #006657;/*2E7D32*/
+      margin-top: 5px;
+      justify-content: center;
+      gap: 10px;
+      min-height: 46px;
+      width: 300px;
+      align-items: center;
+    }
+    #selected-month {
+      font-weight: 600;
+      align-items: center;
+    }
+    #selected-year {
+      opacity: 0.8;
+      align-items: center;
+    }
+
+    .contenedor-grid{
+      display: grid;
+      grid-template-columns: 200px auto 750px auto 270px; /* 2 columnas de igual ancho */
+      grid-template-rows: 1fr /*1fr 1fr;     2 filas de igual altura */
+      gap: 20px;                      /* Espacio entre celdas */
+      margin-left: auto;
+      margin-right: auto;
+      align-items: center;
+      width: var(--ancho);
+      border-bottom: 10px solid rgba(0, 102, 87,1);/*rgba(16, 49, 52, 1);*/
+      margin-bottom: 5px;
+    }
+    .botones{
+      display: flex;
+      flex-wrap: wrap;
+      /*width: 100%;*/
+      justify-content: center;
+      gap: 18px 8px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 40px;
+      margin-top: 0px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    #botones1{
+      /*width: 100%; */
+      grid-row: 1; 
+      grid-column: 3;
+      margin-top: auto;
+      margin-bottom: 10px;
+    }
+    #botones2{
+      /*width: 100%; */
+      grid-row: 1; 
+      grid-column: 5;
+      margin-top: auto;
+      margin-bottom: 10px;
+    }
+    .rank_unidad {
+      /*flex: 1;*/
+      background: rgba(0, 0, 0, 0.25);
+      color: #000000;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 12px;
+      padding: 10px;
+      font-size: 22px;
+      justify-content: center;
+      height: 35px;
+      vertical-align: center;
+    }
+    .rank_title{
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .compact-date-picker {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(191, 236, 229, 0.3);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      /*min-width: 200px;*/
+      width: fit-content;
+      display: none;
+      margin-left: auto;
+      height: 30px;
+    }
+    .nav-btn-2 {
+      border: none;
+      background: none;
+      font-size: 12px;
+      cursor: pointer;
+      color: #006657;
+      /*width: 30px;*/
+      height: 30px;
+      border-radius: 50%;
+      transition: all 0.3s;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .nav-btn-2:hover {
+      background: rgba(76, 175, 80, 0.1);
+      color: #0C917D;/*4CAF50*/
+      transform: scale(1.1);
+    }
+    .nav-btn-2:disabled {
+      /*background: rgba(0,0,0, 0.1);*/
+      color: rgba(0,0,0, 0.1);;/*4CAF50*/
+      transform: scale(1.1);
+    }
+    .month-display {
+      text-align: center;
+      min-width: 130px;
+      color: black;
+      /*font-weight: 300;*/
+    }
+
+    .compact-unit {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(191, 236, 229, 0.5);
+      padding: 8px 15px;
+      border-radius: 30px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      width: fit-content;
+      display: none;
+      margin-right: 30px;
+      height: 30px;
+    }
+    #unidad_select {
+      /*padding: 10px 20px;*/
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      text-align: center;
+      color: black;
+      /*background: linear-gradient(to bottom, #f5f5f5, #ecf9f7);
+      background: linear-gradient(to bottom, #ecf9f7, #dff5f2);*/
+      background: #dff5f2;
+      /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    #unidad_select:hover {
+      /*background: linear-gradient(to bottom, #ecf9f7, #dff5f2);*/
+      background: #ecf9f7;
+    }
+    #unidad_select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(12, 145, 125, 0.25);
+    }
+    #unidad_select option {
+      background-color: #fff;
+      color: #000;
+      padding: 10px;
+    }
+
+  </style>
+</head>
+<header>
+  <div class="contenedor_3"> 
+    <div class="selected-display">
+      <span id="selected-month" class="selected-month">Septiembre</span>
+      <span id="selected-year" class="selected-year">2023</span>
+      <span>-</span>
+      <span id="selected-unit">Oaxaca</span>
+    </div>
+
+    <div class="rank_unidad" id="rank_unidad_1" hidden>
+      <div class="rank_title" id="rank_title_1">1 Nivel</div>
+      <span id="rank_1">71.5</span>
+    </div>
+
+    <div class="rank_unidad" id="rank_unidad_2">
+      <div class="rank_title" id="rank_title_2">2 Nivel</div>
+      <span id="rank_2">60.0</span>
+    </div>
+
+    <div class="compact-date-picker" id="fechas_chico" hidden>
+      <button class="nav-btn-2" id="prev-month"><i class="fa-solid fa-square-caret-left" style="font-size: 16px;"></i></button>      
+      <div class="month-display">
+        <span id="selected-month" class="selected-month">Septiembre</span>
+        <span id="selected-year" class="selected-year">2023</span>
+      </div>      
+      <button class="nav-btn-2" id="next-month"><i class="fa-solid fa-square-caret-right" style="font-size: 16px;"></i></button>
+    </div>
+
+    <div class="compact-unit" id="unidades_selector">
+      <select id="unidad_select">
+        <option></option>
+      </select>
+    </div>
+  </div>  
+</header>
+
+<body>
+  <div id="loader-overlay">
+    <div class="loader"></div>
+  </div>
+  <div style="height: 80px;"></div>
+  <div class="contenedor-grid">
+    <div class="calendario" id="calendario"> <!--- calendar-picker --->
+      <div class="calendario-encabezado"> <!--- calendar-header --->
+        <button class="nav-btn previo"> <!--- nav-btn prev-year --->
+          <i class="fa-solid fa-square-caret-left" style="font-size: 20px;"></i>
+        </button>
+        <span class="año-actual">2023</span> <!--- current-year --->
+        <button class="nav-btn siguiente"><!--- nav-btn next-year --->
+          <i class="fa-solid fa-square-caret-right" style="font-size: 20px;"></i>
+        </button>
+      </div>
+      <div class="month-grid">
+        <button class="month-btn" data-month="1">Ene</button>
+        <button class="month-btn" data-month="2">Feb</button>
+        <button class="month-btn" data-month="3">Mar</button>
+        <button class="month-btn" data-month="4">Abr</button>
+        <button class="month-btn" data-month="5">May</button>
+        <button class="month-btn" data-month="6">Jun</button>
+        <button class="month-btn" data-month="7">Jul</button>
+        <button class="month-btn" data-month="8">Ago</button>
+        <button class="month-btn" data-month="9">Sep</button>
+        <button class="month-btn" data-month="10">Oct</button>
+        <button class="month-btn" data-month="11">Nov</button>
+        <button class="month-btn" data-month="12">Dic</button>
+      </div>
+    </div>
+
+      <div class="botones" id="botones2"></div>
+      <div class="botones" id="botones1"></div>
+  </div>
+
+  <div class="contenedor">    
+    <div id="ranking_1N" class="grafica"></div>  
+    <div id="ranking2" class="grafica"></div>
+  </div>
+
+  <!--<div id="div_ranking2" class="contenedor">  
+  </div>-->
+
+  <div class="contenedor">    
+    <div id="ranking_2N" class="grafica"></div>   
+    <div id="ranking2-2" class="grafica"></div>
+  </div>
+
+  <!--<div id="div_ranking2-2" class="contenedor"> 
+  </div>-->
+
+  <div class="contenedor">
+    <div id="desempeños" class="grafica"></div>
+  </div>
+
+  <div class="contenedor">
+    <div id="indicadores_1" class="grafica"></div>
+  </div>
+
+  <div class="contenedor">
+    <div id="indicadores_2" class="grafica"></div>    
+  </div>
+
+  <div id="analisis_1" hidden>
+    <div class="contenedor">
+      <b style="font-family: 'Noto Sans'; font-size: 32px;">Análisis</b>
+    </div>
+
+    <div class="contenedor">
+      <table id="tabla" style="font-family: 'Noto Sans'; font-size: 16px; border-collapse: collapse; width: 100%;">
+          <thead id="encabezado_tabla">
+            <tr style="background-color: 'rgba(0,0,0,0)';">
+              <th style="padding: 8px; border: 1px none; width: 50%; text-align:left; font-size:25px;">Indicadores cercanos a cambiar.</th>
+              <th style="padding: 8px; border: 1px none; width: 50%; text-align:left; font-size:25px;">-.</th>
+            </tr>
+          </thead>
+          <tbody >
+            <td id="cuerpo_tabla" style="text-align: justify; margin-right: 5px;">Texto explicativo</td>
+          </tbody>
+        </table>
+    </div>
+
+    <div class="contenedor">
+      <div class="contenedor_2">
+        <table id="tabla_1" style="font-family: 'Noto Sans'; font-size: 14px; border-collapse: collapse; width: 80%;">
+          <thead>
+            <tr style="background-color: #f0f0f0;">
+              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Indicador</th>
+              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Valor</th>
+              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Error</th>
+              <th style="padding: 8px; border: 1px none #ccc;" colspan="1"; >Semaforización</th>
+            </tr>
+          </thead>
+          <tbody id="cuerpo_tabla_1">
+            <!-- Las filas se llenarán desde JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <!--- --->
+    </div>
+  </div>
+
+  <script>
+  // Función para actualizar el botón activo
+  function updateActiveButton(comparacion) {
+    document.querySelectorAll("#botones2 button","#botones1 button").forEach(b => {
+      document.querySelectorAll("button").forEach(b => b.classList.remove("activo")); // remover estilo activo a todos.
+    });
+    document.querySelectorAll("button").forEach(b => {
+      if (b.textContent == comparacion){
+        b.classList.add('activo');
+      }
+    });
+  }
+
+  function textColorByPonderacion(resultado){
+    if (resultado >= 80) return 'rgba(255,255,255,1)';
+    if (resultado >= 60) return 'rgba(0,0,0,1)';
+    return 'rgba(255,255,255,1)';
+  }
+  function colorByPonderacion(resultado){
+    //let resultado = obtenido / estimado * 100;
+
+    if (resultado >= 80) return 'rgba(0,88,78,1)';
+    if (resultado >= 60) return 'rgba(255,192,0,1)';
+    return 'rgba(255,0,0,1)';
+  }
+
+  function analisisRanking(datos_pond_fecha, nivel){
+    const resultado = {};
+
+    datos_pond_fecha.forEach(row => {
+      const indicador = row.indicador;
+      const ind = row.ind;
+      const unidad = row.unidad;
+      const pond_obt = parseFloat(row.pond_obt) || 0;
+      const pond_est = parseFloat(row.pond_est) || 0;
+      
+      if (row.nivel == nivel || row.nivel == 'Ambos'){
+        // Inicializa estructura para unidad si no existe
+        if (!resultado[unidad]){
+          resultado[unidad] = {
+            inds: {},
+            pond_proc_obt: 0,
+            pond_norm_obt: 0,
+            pond_proc_est: 0,
+            pond_norm_est: 0,
+            pond_aju: 0,
+            color: 'orange'
+          };
+        }
+
+        // Inicializa estructura para grupo indicador si no existe
+        if (!resultado[unidad].inds[ind]){
+          resultado[unidad].inds[ind] = {
+            indicadores: {},
+            pond_obt: 0,
+            pond_est: 0          
+          };
+        }
+
+        // Inicializa estructura para indicador si no existe
+        if (!resultado[unidad].inds[ind].indicadores[indicador]){
+          resultado[unidad].inds[ind].indicadores[indicador] = {
+            pond_obt: 0,
+            pond_est: 0          
+          };
+        }
+
+        // Suma los valores en el indicador
+        resultado[unidad].inds[ind].indicadores[indicador].pond_obt += pond_obt;
+        resultado[unidad].inds[ind].indicadores[indicador].pond_est += pond_est;
+
+        // Suma los valores en el grupo indicador
+        resultado[unidad].inds[ind].pond_obt += pond_obt;
+        resultado[unidad].inds[ind].pond_est += pond_est;
+
+        // Suma los totales del indicador
+        if (procesos.includes(ind)){
+          resultado[unidad].pond_proc_obt += pond_obt*0.6;
+          resultado[unidad].pond_proc_est += pond_est*0.6;
+        } else if (normativos.includes(ind)){
+          resultado[unidad].pond_norm_obt += pond_obt*0.4;
+          resultado[unidad].pond_norm_est += pond_est*0.4;
+        }
+      }
+    });
+
+    // Calcula pond_aju para cada indicador
+    Object.values(resultado).forEach(obj => {
+      obj.pond_aju = ((obj.pond_proc_obt/obj.pond_proc_est*60) + (obj.pond_norm_obt/obj.pond_norm_est*40));
+      if (obj.pond_aju >= 80) {
+        obj.color = 'green';
+      } else if (obj.pond_aju >= 60){
+        obj.color = 'orange';
+      } else {
+        obj.color = 'red';
+      }
+    });
+    return resultado;
+  }
+
+  function formatearFecha(fecha) {
+    const date = new Date(fecha);
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const mesNombre = meses[date.getMonth()];
+    const año = date.getFullYear();
+    return `${mesNombre} ${año}`;
+  }
+
+  function insertarSaltosLinea(text, maxLineLength) {
+    const words = text.split(' ');
+    let line = '';
+    let result = '';
+
+    for (let word of words) {
+      if ((line + word).length > maxLineLength) {
+        result += line.trim() + '<br>';
+        line = '';
+      }
+      line += word + ' ';
+    }
+
+    result += line.trim(); // Agrega la última línea
+    return result;
+  }
+
+  function filtrarErrores(datosFiltrados) {
+    const datosConError = datosFiltrados.map(row => {
+      const indicador = row['indicador'];
+      const valor = row['valor'];
+      const Resperado = row['esperado'];
+      const Rmedio = row['medio'];
+      const Rbajo = row['bajo'];
+      const fecha = row['fecha'];
+      const color = row['color'];
+
+      let errorEsperado = calcularError(valor, Resperado);
+      let errorMedio = calcularError(valor, Rmedio);
+      let errorBajo = calcularError(valor, Rbajo);
+
+      if (color == 'red') {
+        error = (Math.abs(errorMedio) <= Math.abs(errorEsperado)) ? errorMedio : errorEsperado;
+        errorColor = (Math.abs(errorMedio) < Math.abs(errorEsperado)) ? 'orange' : 'green';
+      } else if (color == 'orange'){
+        error = errorEsperado;
+        errorColor = 'green';
+      } else if (color == 'green') {
+        error = (Math.abs(errorMedio) <= Math.abs(errorBajo)) ? errorMedio : errorBajo;
+        errorColor = (Math.abs(errorMedio) < Math.abs(errorBajo)) ? 'orange' : 'red';
+      }
+      // console.log(error, errorColor, '-------', indicador);
+      valor_esperado = valor - error;
+      return {
+        indicador: indicador,
+        error: error,
+        valor: valor,
+        limite: valor_esperado,
+        colorError: errorColor,
+        fecha: fecha
+      };
+    });
+    //console.log(datosConError);
+    return datosConError;
+  }
+
+  function calcularError(numero, rango){
+    if (Array.isArray(rango)){
+      if (Array.isArray(rango[0])){
+        err1 = numero - rango[0][0];
+        err2 = numero - rango[0][1];
+        err3 = numero - rango[1][0];
+        err4 = numero - rango[1][1];
+        errores = [err1, err2, err3, err4];
+        errores_abs = [Math.abs(err1), Math.abs(err2), Math.abs(err3), Math.abs(err4)];
+        error_ = Math.min(...errores_abs);
+        index = errores_abs.indexOf(error_);
+        error = errores[index];
+      } else{
+        err1 = numero - rango[0];
+        err2 = numero - rango[1];
+        error = (Math.abs(err1) < Math.abs(err2)) ? err1 : err2;
+      }
+    } else {
+      error = numero - rango;
+    }
+    return error;
+  }
+
+  function obtenerRangoNumero(valor){
+    if (valor == null || valor === "") {
+      return null;
+    }
+    valor = valor.toString();
+    valor = valor.trim();
+
+    if (valor.includes("o")) {
+      const partes = valor.split("o").map(v => v.trim());
+      return partes.map(parte => obtenerRangoNumero(parte)); // Recursivo para limpiar cada parte
+    }
+
+    if (valor.includes("-")) {
+      const partes = valor.split("-").map(v => parseFloat(v.trim()));
+      return [partes[0], partes[1]];
+    } else if (valor.startsWith(">=")) {
+      return parseFloat(valor.substring(2).trim()) // { tipo: "mayorIgual", valor: parseFloat(valor.substring(2).trim()) };
+    } else if (valor.startsWith("<=")) {
+      return parseFloat(valor.substring(2).trim()) // { tipo: "menorIgual", valor: parseFloat(valor.substring(2).trim()) };
+    } else if (valor.startsWith(">")) {
+      return parseFloat(valor.substring(1).trim()) // { tipo: "mayor", valor: parseFloat(valor.substring(1).trim()) };
+    } else if (valor.startsWith("<")) {
+      return parseFloat(valor.substring(1).trim()) // { tipo: "menor", valor: parseFloat(valor.substring(1).trim()) };
+    } else {
+      return parseFloat(valor);
+    }
+  }
+
+  function evaluarCondicion(numero, condicionTexto) {
+    if (!condicionTexto) return false;
+    // Normalizar: quitar espacios, pasar a minúscula
+    condicionTexto = condicionTexto.toLowerCase().replace(/\s+/g, "");
+    // console.log('evaluando..', numero, condicionTexto)
+    // Dividir por "o" (también podrías usar "|" o "," si quisieras)
+    const condiciones = condicionTexto.split("o");
+    // Evaluar cada subcondición
+    return condiciones.some(cond => {
+      if (/^\d+(\.\d+)?$/.test(cond)) {
+        //console.log(numero,'===', cond)
+        return numero === parseFloat(cond);
+
+      } else if (/^<=\d+(\.\d+)?$/.test(cond)) {
+        //console.log(numero,'<=', cond.slice(2))
+        return numero <= parseFloat(cond.slice(2));
+
+      } else if (/^>=\d+(\.\d+)?$/.test(cond)) {
+        //console.log(numero,'>=', cond.slice(2))
+        return numero >= parseFloat(cond.slice(2));
+
+      } else if (/^<\d+(\.\d+)?$/.test(cond)) {
+        //console.log(numero,'<', cond.slice(1))
+        return numero < parseFloat(cond.slice(1));
+
+      } else if (/^>\d+(\.\d+)?$/.test(cond)) {
+        //console.log(numero,'>', cond.slice(1))
+        return numero > parseFloat(cond.slice(1));
+
+      } else if (/^\d+(\.\d+)?-\d+(\.\d+)?/.test(cond)) {
+        const [inicio, fin] = cond.split("-").map(Number);
+        //console.log(numero,'>=', inicio, '&&', numero, '<=', fin)
+        return numero >= inicio && numero <= fin;
+      }
+      return false;
+    });
+  }  
+  
+  function calcularColor(valor, esperado, medio, bajo) {
+    if (evaluarCondicion(valor, esperado)) {
+      return "green";
+    } else if (evaluarCondicion(valor, bajo)) {
+      return "red";
+    } else if (evaluarCondicion(valor, medio)) {
+      return "orange";
+    } else {
+      return "white";
+    }
+  }
+
+  function filtrarFecha(datos, fechaSeleccionada){
+    return datos.filter(d =>
+      d.fecha === fechaSeleccionada
+    );
+  }
+
+  function filtrarUnidadFecha(datos, unidadSeleccionada, fechaSeleccionada) {
+    return datos.filter(d =>
+      d.unidad === unidadSeleccionada && d.fecha === fechaSeleccionada
+    );
+  }
+
+  function filtrarDesempeño(datos, colorSeleccionado) {
+    return datos.filter(d =>
+      d.color === colorSeleccionado
+    );
+  }
+
+  function filtrarUnidadIndicador(datos, unidadSeleccionada, indicadorSeleccionado) {
+    return datos.filter(d =>
+      d.unidad === unidadSeleccionada && d.indicador === indicadorSeleccionado
+    );
+  }
+
+  function contarColores(datosFiltrados) {
+    const conteo = {
+      green: 0,
+      red: 0,
+      orange: 0,
+      white: 0
+    };
+    datosFiltrados.forEach(d => {
+      if (conteo[d.color] !== undefined) {
+        conteo[d.color]++;
+      }
+    });
+
+    return conteo;
+  }
+
+  function actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño) {
+    const datosFiltrados = filtrarUnidadFecha(datos, unidad_deseada, fecha_deseada);
+    const conteo = contarColores(datosFiltrados);
+    //const labels = ["Esperado", "Bajo", "Medio", "Sin datos"];
+    const pulled = [0, 0, 0, 0];
+    const values = [conteo.green, conteo.red, conteo.orange, conteo.white];
+    const colors = ["green", "red", "orange", "lightgray"];
+
+    index_color = labels.indexOf(desempeño);
+    pulled[index_color] = 0.1;
+    n_indicadores = values[index_color];
+
+    titulo = unidad_deseada;
+    const reg_exp = /(?<=\d{2})\s/;
+    titulo = titulo.replace(reg_exp, "<br>");
+
+    // console.log(datosFiltrados);
+    Plotly.react("desempeños", 
+      [{
+        values: values,
+        labels: labels,
+        type: "pie",
+        marker: {
+          colors: colors
+        },
+        textinfo: "label+percent",
+        insidetextorientation: "radial",
+        pull: pulled,
+        hole: 0.3,
+        textfont: {
+          size: 18
+        },
+        hoverinfo: 'none',//'label+percent+value',
+        hovertemplate: '<b>%{label}</b><br>%{percent:.1%}<br>Valor: %{value}<extra></extra>',
+      }], 
+      {
+        title: {
+          text: `<b>${titulo}</b>`,
+          font: {
+            size: 24,
+            color: '#103134',//"black"
+            weight: 'bold'
+          },
+          x: 0.5,
+          //position: "center middle"
+        },
+        annotations: [{  // Texto en el centro
+          text: `<b>No.<br>Indicadores:<br><br><span style="font-size:30px; margin:25px;">${n_indicadores}</span><b>`,
+          font: { family: 'Noto Sans', size: 14, color: '#333' },
+          showarrow: false,
+          x: 0.5,  // Posición X (0-1)
+          y: 0.5,  // Posición Y (0-1)
+          xanchor: 'center',
+          yanchor: 'middle',
+          align: 'center'
+        }],
+        showlegend: false,
+        hoverlabel: {
+          shadow: {
+            color: 'rgba(0,0,0,0.5)',
+            x: 3,
+            y: 3,
+            blur: 10
+          }
+        },
+        plot_bgcolor: 'rgba(0,0,0,0)', // Fondo transparente
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        margin: { t: 40, b: 40, l: 30, r: 30 }, // Márgenes ajustados
+        font: {
+          family: 'Noto Sans',
+          color: '#333333'
+        },
+        hovermode: 'closest',
+        animations: {
+          enabled: true,
+          easing: 'elastic-in-out'
+        }
+      }
+    );
+    return datosFiltrados;
+  }
+
+  function actualizarGrafica3(datosFiltrados, desempeño){
+    document.getElementById('analisis_1').hidden = false;
+
+    if (desempeño == labels[0]) {
+      color_deseado = 'green';
+    } else if (desempeño == labels[1]) {
+      color_deseado = 'red';
+    } else if (desempeño == labels[2]) {
+      color_deseado = 'orange';
+    } else {
+      color_deseado = 'white';
+    }
+
+    const datosFiltrados2 = filtrarDesempeño(datosFiltrados, color_deseado);
+    // console.log('DATOS FILTRADOS 2: ',datosFiltrados2);
+    // Calcular errores y armar nuevo array
+    const datosConError = filtrarErrores(datosFiltrados2);
+    const datosConError2 = datosConError.slice();
+
+    // Ordenar por valor absoluto del error de menor a mayor
+    datosConError2.sort((a, b) => Math.abs(a.error) - Math.abs(b.error));
+    //console.log(datosConError, datosConError2);
+    /*
+    */
+    // Crear arrays para la gráfica
+    const indicadores = datosConError.map(row => row.indicador);
+    const valores = datosConError.map(row => row.valor);
+    const errores = datosConError.map(row => row.error);
+    const limites = datosConError.map(row => row.limite);
+    const colores_ = datosConError.map(row => row.colorError);
+    const textos = valores.map((valor, i) => {
+      const error_ = errores[i];
+      const signo_ = error_ >= 0 ? "▲" : "▼"; // Usa el signo correcto
+      return `${valor.toFixed(2)} (${signo_}${Math.abs(error_).toFixed(2)})`;
+    });
+    // console.log(valores, textos, limites);
+    // console.log(datosFiltrados2);
+    Plotly.react("indicadores_1", 
+      [
+        {
+          type: "bar",
+          x: indicadores,
+          y: valores,
+          text: textos,
+          textposition: 'outside',
+          cliponaxis: false,
+          texttemplate: '<b>%{y:.1f}</b>',
+          textangle: -45,
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { color: color_deseado },
+          hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
+          hoverlabel: {
+            bgcolor: color_deseado,
+            //bordercolor: '#000000',
+            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+          },
+          showlegend: false
+        },
+        // Línea de pasos (valores esperados)
+        {
+          type: "scatter",
+          mode: "lines+markers",
+          x: indicadores,
+          y: limites,
+          //name: "Limite Rango",
+          //hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
+          line: {
+            shape: "hvh",  // step graph: horizontal-vertical
+            color: 'black',
+            width: 2,
+            dash: 'dot' // (dot, dash)
+          },
+          marker: {
+            color: colores_,
+            symbol: 'circle', //"cross-thin"
+            size: 15
+          },
+          hovertemplate: "Limite rango: <b>%{y}</b><extra></extra>",
+          //hovertemplate: "",
+          showlegend: false
+        }
+      ], {
+        title: {
+          text: `Indicadores con desempeño ${desempeño}, ${fecha_deseada}`,
+          font: { size: 24, color: "black" },
+          x: 0.5
+        },
+        margin: { b: 100 },
+        //xaxis: { title: "Indicador" },
+        yaxis: { title: "Valor" },
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',//'#f9f9f9',
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.2)',
+          x: 3,
+          y: 3,
+          blur: 10
+        },
+        uniformtext: {
+          //mode: 'hide', // Oculta etiquetas que no caben
+          minsize: 14   // Tamaño mínimo de fuente
+        },
+        xaxis: {
+          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+          tickfont: {
+            size: 14,
+            weight: 'bold'
+          }
+        }
+      }
+    );
+
+    // Crear arrays para la tabla
+    const indicadores2 = datosConError2.map(row => row.indicador);
+    const valores2 = datosConError2.map(row => row.valor);
+    const errores2 = datosConError2.map(row => row.error);
+    const colores_2 = datosConError2.map(row => row.colorError);
+
+    const textoAnalisis = document.getElementById('cuerpo_tabla');
+    textoAnalisis.innerHTML = `Los indicadores con desempeño <b>${desempeño}</b> enlistados, son aquellos que estuvieron cerca del límite para cambiar a otro nivel de desempeño. Por lo que, se destacan para futuras acciones.` ;
+
+    const cuerpoTabla_1 = document.getElementById("cuerpo_tabla_1");
+    cuerpoTabla_1.innerHTML = "";
+    obs_indicadores = (indicadores2.length < 5) ? indicadores2.length : 5;
+    for (i = 0; i < obs_indicadores; i++){
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td style="padding: 4px; border: 1px solid #ccc;"><b>${indicadores2[i]}</b></td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center";>${valores2[i].toFixed(2)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center";>${errores2[i].toFixed(2)}</td>
+        <td style="padding: 1px; border: 1px solid #ccc; font-size:40px; text-align:center;"><span style="color: ${color_deseado};">■</span><span style="font-size:25px;">➔</span><span style="color: ${colores_2[i]};">■</span></td>
+        
+      `;
+      cuerpoTabla_1.appendChild(fila);    
+    }
+    return indicadores2;
+  }
+
+  function actualizarGrafica4(datos, unidad_deseada, indicador_deseado, desempeño){
+    const datosFiltrados3 = filtrarUnidadIndicador(datos, unidad_deseada, indicador_deseado);
+    console.log(unidad_deseada, indicador_deseado);
+    datosConError = filtrarErrores(datosFiltrados3);
+    //console.log(datosConError, datosFiltrados3);
+    //console.log('DATOS FILTRADOS 3: ',datosFiltrados3);
+    // Crear arrays para la gráfica
+    fechas = datosFiltrados3.map(row => row['fecha']);
+    const valores = datosFiltrados3.map(row => row['valor']);
+    const colores = datosFiltrados3.map(row => row['color']);
+    //const textos = datosFiltrados3.map(row => row['valor'].toFixed(2));
+    const nombres_indicadores = datosFiltrados3.map(row => row['nombre_indicador']);
+    //console.log(textos);
+    const nombre_indicador = nombres_indicadores[0];
+    const nombre_formateado = insertarSaltosLinea(nombre_indicador, 80);
+
+    const indicadores = datosConError.map(row => row['indicadores']);
+    const limites = datosConError.map(row => row['limite']);
+    const errores = datosConError.map(row => row['error']);
+    const colores_ = datosConError.map(row => row.colorError);
+    const textos = valores.map((valor, i) => {
+      const error_ = errores[i];
+      const signo_ = error_ >= 0 ? "▲" : "▼"; // Usa el signo correcto
+      return `${valor.toFixed(2)} (${signo_}${Math.abs(error_).toFixed(2)})`;
+    });
+    let index_fecha = fechas.indexOf(fecha_deseada);
+    let fechas_ = [];
+    let lim_inf = 0, lim_sup = 0;
+    if (fechas.length < 14){
+      fechas_ = fechas.slice(0, index_fecha+1);
+      lim_inf = 0;
+      lim_sup = index_fecha+1;
+    } else{
+      if ((index_fecha-12) < 0) {
+        fechas_ = fechas.slice(0, index_fecha+1);
+        lim_inf = 0;
+        lim_sup = index_fecha+1;
+      } else{
+        fechas_ = fechas.slice(index_fecha-12, index_fecha+1);
+        lim_inf = index_fecha-12;
+        lim_sup = index_fecha+1;
+      }
+    }
+    //console.log('aqui', fechas, index_fecha, fechas_, fechas.slice(lim_inf,lim_sup));
+    
+    Plotly.react("indicadores_2", [
+      {
+        type: "bar",
+        x: fechas.slice(lim_inf,lim_sup),
+        y: valores.slice(lim_inf,lim_sup),
+        text: textos.slice(lim_inf,lim_sup),
+        textposition: 'outside',
+        texttemplate: '<b>%{y:.2f}<b>',
+        //textangle: -90,
+        textfont: { size: 18, family: 'Noto Sans' },
+        marker: { color: colores.slice(lim_inf,lim_sup) },
+        hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
+        hoverlabel: {
+          bgcolor: colores.slice(lim_inf,lim_sup),
+          //bordercolor: '#000000',
+          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+        },
+        showlegend: false,
+        marker: {
+          color: colores.slice(lim_inf,lim_sup) 
+        }
+      },
+      {
+        type: "scatter",
+        mode: "lines+markers",
+        x: fechas.slice(lim_inf,lim_sup),
+        y: limites.slice(lim_inf,lim_sup),
+        //name: "Valor esperado",
+        line: {
+          shape: "hvh",  // step graph: horizontal-vertical
+          color: 'black',
+          width: 2,
+          dash: 'dot' // (dot, dash)
+        },
+        marker: {
+          color: colores_.slice(lim_inf,lim_sup),
+          symbol: 'circle', //"cross-thin"
+          size: 15
+        },
+        hovertemplate: "Limite rango: <b>%{y}</b><extra></extra>",
+        //hovertemplate: "",
+        showlegend: false
+      }
+    ], {
+      title: {
+        text: `<b><span style="font-size:18px; margin:25px;">${nombre_formateado}</span><br>${indicador_deseado} - ${unidad_deseada}</b><br>`,
+        font: { size: 20, color: "black" },
+        x: 0.5
+      },
+      //xaxis: { title: "Fechas" },
+      yaxis: { title: "Valor" },     
+      margin: { b: 100, t:120 }, 
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      uniformtext: {
+        mode: 'hide', // Oculta etiquetas que no caben
+        minsize: 14   // Tamaño mínimo de fuente
+      },
+      xaxis: {
+        /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+        tickfont: {
+          size: 14,
+          weight: 'bold'
+        }
+      }
+    });
+  }
+
+  function actualizarRankingPN(datos_pond, fecha_deseada){
+    if (unidad_deseada == 'HGZ 03 Tuxtepec' | unidad_deseada == 'HGZ 01 Oaxaca' | unidad_deseada == 'UMAA Oaxaca'){
+      document.getElementById('ranking_1N').hidden = true;
+      document.getElementById('ranking2').hidden = true;
+    }
+    else{
+      document.getElementById('ranking_1N').hidden = false;
+      document.getElementById('ranking2').hidden = false;
+
+      datos_pond_fecha = filtrarFecha(datos_pond, fecha_deseada);
+      //console.log(datos_pond_fecha)
+
+      ranking_nivel_1 = analisisRanking(datos_pond_fecha, 'Primer Nivel');
+      //console.log(ranking_nivel_1);
+
+      const datosOrdenados_1 = Object.entries(ranking_nivel_1)
+        .map(([unidad, valores]) => ({
+          unidad,
+          pond_aju: valores.pond_aju,
+          color: valores.color
+        }))
+        .sort((a, b) => b.pond_aju - a.pond_aju);  // De mayor a menor
+      
+      const sumaTotal = datosOrdenados_1.reduce((acc, d) => acc + d.pond_aju, 0);
+      const promedio = sumaTotal / datosOrdenados_1.length;
+      datosOrdenados_1.push({
+        unidad: 'Promedio',
+        pond_aju: promedio,
+        color: 'deepskyblue'
+      })
+      datosOrdenados_1.sort((a, b) => b.pond_aju - a.pond_aju);
+      //console.log(datosOrdenados_1, typeof datosOrdenados_1);
+      const unidades = datosOrdenados_1.map(d => d.unidad); // etiquetas
+      const valores = datosOrdenados_1.map(d => d.pond_aju);
+      const colores_ranking = datosOrdenados_1.map(d => d.color);
+      const textos = datosOrdenados_1.map((valor, i) => {
+        const unidad = unidades[i];
+        const partes = unidad.split(' ');
+        return (partes.length >= 2) ? partes.slice(0, 2).join(' ') : partes[0];
+      })
+
+      Plotly.react("ranking_1N",
+        [
+          {
+            type: "bar",
+            x: unidades,
+            y: valores,
+            text: textos,
+            cliponaxis: false,
+            textposition: 'outside',
+            texttemplate: '<b>%{y:.2f}</b>',
+            textfont: {size: 25},
+            marker: { color: colores_ranking },
+            hovertemplate: '<b>%{text}</b><br>%{y:.4f}<extra></extra>',
+            hoverlabel: {
+              bgcolor: colores_ranking,
+              font: { family: 'Noto Sans', size: 18}
+            }
+          },
+          {
+            x: [unidad_deseada],
+            y: [valores[unidades.indexOf(unidad_deseada)]],
+            type: 'bar',
+            marker: { 
+              color: colores_ranking[unidades.indexOf(unidad_deseada)],
+              line: {
+                color: 'rgba(0,0,0,0.3)', // Borde sutil
+                width: 8
+              }
+            },
+            hoverinfo: 'none',
+            hovertemplate: ''
+            /*width: [1.0]  // Ancho personalizado para esta barra*/
+          }
+        ],
+        {
+          barmode: 'overlay',
+          title: {
+            text: `Ranking de Primer Nivel, ${fecha_deseada}`,
+            font: { size: 24, color: "black" },
+            x: 0.5
+          },
+          width: 800,
+          height: 500,
+          autosize: true,
+          /*xaxis: { title: "Valor" },*/
+          plot_bgcolor: 'rgba(0,0,0,0)',
+          paper_bgcolor: 'rgba(0,0,0,0)',
+          shadow: {
+            enabled: true,
+            color: 'rgba(0,0,0,0.2)',
+            x: 3,
+            y: 3,
+            blur: 10
+          },
+          showlegend: false,
+          margin: { b: 200, l:20, r:10 },
+          uniformtext: {
+            minsize: 10   // Tamaño mínimo de fuente
+          },
+          padding: {b: 150},
+          xaxis: {
+            tickangle: -90, //
+            tickfont: {
+              size: 12
+            }
+          }
+        }
+      ); // ranking_1N
+    }
+  }
+
+  function actualizarRankingSN(datos_pond, fecha_deseada){
+    if ((unidad_deseada == 'HGZ 03 Tuxtepec' | unidad_deseada == 'HGZ 01 Oaxaca' | unidad_deseada == 'HGZMF 02 Salina Cruz' | unidad_deseada == 'HGSMF 41 Huatulco')){
+      document.getElementById('ranking_2N').hidden = false;
+      document.getElementById('ranking2-2').hidden = false;
+    }
+    else{
+      document.getElementById('ranking_2N').hidden = true;
+      document.getElementById('ranking2-2').hidden = true;
+    }
+    if (unidad_deseada == 'Oaxaca'){
+      document.getElementById('ranking2-2').hidden = false;
+      document.getElementById('ranking_1N').hidden = true;
+      document.getElementById('ranking2').hidden = true;
+    }
+    datos_pond_fecha = filtrarFecha(datos_pond, fecha_deseada);
+    //console.log(datos_pond_fecha);
+
+    ranking_nivel_2 = analisisRanking(datos_pond_fecha, 'Segundo Nivel');
+
+    const datosOrdenados_2 = Object.entries(ranking_nivel_2)
+      .map(([unidad, valores]) => ({
+        unidad,
+        pond_aju: valores.pond_aju,
+        color: valores.color
+      }))
+      .sort((a, b) => b.pond_aju - a.pond_aju);  // De mayor a menor
+    const sumaTotal = datosOrdenados_2.reduce((acc, d) => acc + d.pond_aju, 0);
+    const promedio = sumaTotal / datosOrdenados_2.length;
+    datosOrdenados_2.push({
+      unidad: 'Promedio',
+      pond_aju: promedio,
+      color: 'deepskyblue'
+    });
+    datosOrdenados_2.sort((a, b) => b.pond_aju - a.pond_aju);
+    //console.log(datosOrdenados_2);
+    const unidades = datosOrdenados_2.map(d => d.unidad); // etiquetas
+    const valores = datosOrdenados_2.map(d => d.pond_aju);
+    const colores_ranking = datosOrdenados_2.map(d => d.color);
+    const textos = datosOrdenados_2.map((valor, i) => {
+      const unidad = unidades[i];
+      const partes = unidad.split(' ');
+      return (partes.length >= 2) ? partes.slice(0, 2).join(' ') : partes[0];
+    })
+
+    Plotly.react("ranking_2N",
+      [
+        {
+          type: "bar",
+          x: unidades,
+          y: valores,
+          text: textos,
+          cliponaxis: false,
+          textposition: 'outside',
+          texttemplate: '<b>%{y:.2f}</b>',
+          /*textangle: -45,*/
+          textfont: {size: 20},
+          marker: { color: colores_ranking },
+          hovertemplate: '<b>%{text}</b><br>%{y:.4f}<extra></extra>',
+          hoverlabel: {
+            bgcolor: colores_ranking,
+            font: { family: 'Noto Sans', size: 20}
+          }
+        },
+        {
+          x: [unidad_deseada],
+          y: [valores[unidades.indexOf(unidad_deseada)]],
+          type: 'bar',
+          /*name: 'Unidad resaltada',*/
+          marker: { 
+            color: colores_ranking[unidades.indexOf(unidad_deseada)],
+            line: {
+              color: 'rgba(0,0,0,0.3)', // Borde sutil
+              width: 8
+            }
+          },
+          hoverinfo: 'none',
+          hovertemplate: ''
+          /*width: [1.0]  // Ancho personalizado para esta barra*/
+        }
+      ],
+      {
+        barmode: 'overlay',
+        title: {
+          text: `Ranking de Segundo Nivel, ${fecha_deseada}`,
+          font: { size: 24, color: "black" },
+          x: 0.5
+        },
+        autosize: true,
+        width: 800,
+        height: 500,
+        yaxis: { title: "Valor" },
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.2)',
+          x: 3,
+          y: 3,
+          blur: 10
+        },
+        /*margin: { t: 150 },*/
+        uniformtext: {
+          minsize: 14   // Tamaño mínimo de fuente
+        },
+        showlegend: false,
+        xaxis: {
+          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+          tickfont: {
+            size: 12
+          }
+        }
+      }
+    ); // ranking_1N
+  }
+
+  function actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada){
+    if (unidad_deseada == 'HGZ 03 Tuxtepec' | unidad_deseada == 'HGZ 01 Oaxaca' | unidad_deseada == 'UMAA Oaxaca'){
+      document.getElementById('rank_unidad_1').hidden = true;
+    }
+    else{
+      document.getElementById('rank_unidad_1').hidden = false;
+    }
+
+    //document.getElementById('div_ranking2').hidden = false;
+    //document.getElementById('ranking2').hidden = false;
+    datos_pond_fecha = filtrarFecha(datos_pond, fecha_deseada);
+    //console.log(datos_pond_fecha);
+    ponderaciones = analisisRanking(datos_pond_fecha, 'Primer Nivel');
+    //console.log(ponderaciones);
+
+    const pond_unidad = Object.fromEntries(Object.entries(ponderaciones).filter(([unidad]) => unidad === unidad_deseada));
+    //console.log(pond_unidad);
+
+    let grupo_indicadores = {};
+    if (pond_unidad[unidad_deseada]) {
+      const unidad = pond_unidad[unidad_deseada];
+      grupo_indicadores = Object.entries(unidad.inds);
+      document.getElementById('rank_1').innerHTML = unidad.pond_aju.toFixed(2);
+      document.getElementById('rank_unidad_1').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
+      document.getElementById('rank_unidad_1').style.color = textColorByPonderacion(unidad.pond_aju);
+      console.log(unidad);
+    } else {
+      return;
+    }
+
+    const x_labels = grupo_indicadores.map(([nombre]) => nombre);
+    const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
+    const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
+      let resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado);
+    });
+    const col_estimados = grupo_indicadores.map(([_,valor]) => {
+      let resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado).replace(",1)",",.25)");
+    });
+    const textos = x_labels.map((valor, i) => {
+      const estimado = estimados[i];
+      const obtenido = obtenidos[i];
+      const faltante = estimado - obtenido;
+      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+    });
+    //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
+    Plotly.react("ranking2", 
+      [
+        {
+          type: "bar",
+          orientation: 'h',
+          y: x_labels,
+          x: estimados,
+          cliponaxis: false,
+          textposition: 'outside',
+          texttemplate: '<b>%{x:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_estimados,
+            line: {color: col_estimados, width: 1}
+          },
+          /*hoverlabel: {
+            bgcolor: color_deseado,
+            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+          },*/
+          showlegend: false,
+          name: 'Pond. Estimada',
+          hoverinfo: 'none'
+        },
+        {
+          type: "bar",
+          orientation: 'h',
+          y: x_labels,
+          x: obtenidos,
+          text: textos,
+          cliponaxis: false,
+          textposition: 'inside',
+          texttemplate: '<b>%{x:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_obtenidos,
+            line: {color: col_estimados, width: 1}
+          },
+          hoverlabel: {
+            bgcolor: 'white',
+            bordercolor: 'white',
+            font: { family: 'Noto Sans', color: 'black', size: 16}
+          },
+          showlegend: false,
+          /*name: 'Pond. Obtenida',*/
+          hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
+          /*hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,*/
+          hovermode: 'closest'
+        }
+      ], 
+      {
+        height: 500,
+        width: 385,
+        autosize: true,
+        margin: {b: 20},
+        title: {
+          text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
+          font: { size: 20, color: "black" },
+          x: 0.5
+        },
+        /*yaxis: { title: "Valor" },*/
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.2)',
+          x: 3,
+          y: 3,
+          blur: 10
+        },
+        uniformtext: {
+          minsize: 14   // Tamaño mínimo de fuente
+        },
+        barmode: 'overlay',
+        xaxis: {
+          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+          tickfont: {
+            size: 16,
+            weight: 'bold'
+          }
+        }
+      }
+    ); // ranking2
+  }
+
+  function actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada){
+    if ((unidad_deseada == 'HGZ 03 Tuxtepec' | unidad_deseada == 'HGZ 01 Oaxaca' | unidad_deseada == 'HGZMF 02 Salina Cruz' | unidad_deseada == 'HGSMF 41 Huatulco')){
+      document.getElementById('rank_unidad_2').hidden = false;
+    }
+    else{
+      document.getElementById('rank_unidad_2').hidden = true;
+    }
+    if (unidad_deseada == 'Oaxaca'){
+      document.getElementById('rank_unidad_2').hidden = false;
+      document.getElementById('rank_unidad_1').hidden = true;
+    }
+
+    //document.getElementById('div_ranking2-2').hidden = false;
+    //document.getElementById('ranking2-2').hidden = false;
+    datos_pond_fecha = filtrarFecha(datos_pond, fecha_deseada);
+    //console.log(datos_pond_fecha);
+    ponderaciones = analisisRanking(datos_pond_fecha, 'Segundo Nivel');
+    //console.log(ponderaciones);
+
+    const pond_unidad = Object.fromEntries(Object.entries(ponderaciones).filter(([unidad]) => unidad === unidad_deseada));
+    //console.log(pond_unidad);
+    let grupo_indicadores = {};
+    if (pond_unidad[unidad_deseada]) {
+      const unidad = pond_unidad[unidad_deseada];
+      grupo_indicadores = Object.entries(unidad.inds);
+      document.getElementById('rank_2').innerHTML = unidad.pond_aju.toFixed(2);
+      document.getElementById('rank_unidad_2').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
+      document.getElementById('rank_unidad_2').style.color = textColorByPonderacion(unidad.pond_aju);
+      console.log(unidad);
+    } else{
+      return;
+    }
+
+    const x_labels = grupo_indicadores.map(([nombre]) => nombre);
+    const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
+    const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
+      const resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado);
+    });
+    const col_estimados = grupo_indicadores.map(([_,valor]) => {
+      const resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado).replace(",1)",",.25)");
+    });
+    const textos = x_labels.map((valor, i) => {
+      const estimado = estimados[i];
+      const obtenido = obtenidos[i];
+      const faltante = estimado - obtenido;
+      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+    });
+    //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
+    Plotly.react("ranking2-2", 
+      [
+        {
+          type: "bar",
+          orientation: 'h',
+          y: x_labels,
+          x: estimados,
+          cliponaxis: false,
+          textposition: 'outside',
+          texttemplate: '<b>%{x:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_estimados,
+            line: {color: col_estimados, width: 1}
+          },
+          /*hoverlabel: {
+            bgcolor: color_deseado,
+            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+          },*/
+          showlegend: false,
+          name: 'Pond. Estimada',
+          hoverinfo: 'none'
+        },
+        {
+          type: "bar",
+          orientation: 'h',
+          y: x_labels,
+          x: obtenidos,
+          text: textos,
+          cliponaxis: false,
+          textposition: 'inside',
+          texttemplate: '<b>%{x:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_obtenidos,
+            line: {color: col_estimados, width: 1}
+          },
+          hoverlabel: {
+            bgcolor: 'white',
+            bordercolor: 'white',
+            font: { family: 'Noto Sans', color: 'black', size: 20}
+          },
+          showlegend: false,
+          /*name: 'Pond. Obtenida',
+          hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,*/
+          hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
+        }
+      ], 
+      {
+        height: 500,
+        width: 385,
+        margin: {b: 20},
+        autosize: true,
+        title: {
+          text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
+          font: { size: 20, color: "black" },
+          x: 0.5
+        },
+        /*yaxis: { title: "Valor" },*/
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.2)',
+          x: 3,
+          y: 3,
+          blur: 10
+        },
+        uniformtext: {
+          minsize: 14   // Tamaño mínimo de fuente
+        },
+        barmode: 'overlay',
+        xaxis: {
+          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+          tickfont: {
+            size: 16,
+            weight: 'bold'
+          }
+        }
+      }
+    ); // ranking2
+  }
+
+  function actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada){
+    //document.getElementById('div_ranking2-2').hidden = false;
+    //document.getElementById('ranking2-2').hidden = false;
+    datos_pond_fecha = filtrarFecha(datos_pond, fecha_deseada);
+    //console.log(datos_pond_fecha);
+    ponderaciones = analisisRanking(datos_pond_fecha, 'Delegacion');
+    //console.log(ponderaciones, unidad_deseada);
+
+    const pond_unidad = Object.fromEntries(Object.entries(ponderaciones).filter(([unidad]) => unidad == unidad_deseada));
+    //console.log(pond_unidad);
+    let grupo_indicadores = {};
+    if (pond_unidad[unidad_deseada]) {
+      const unidad = pond_unidad[unidad_deseada];
+      grupo_indicadores = Object.entries(unidad.inds);
+      document.getElementById('rank_2').innerHTML = unidad.pond_aju.toFixed(2);
+      document.getElementById('rank_unidad_2').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
+      document.getElementById('rank_unidad_2').style.color = textColorByPonderacion(unidad.pond_aju);
+      console.log(unidad);
+    } else{
+      console.log('No hay nada')
+      return;
+    }
+
+    const x_labels = grupo_indicadores.map(([nombre]) => nombre);
+    const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
+    const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
+      const resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado);
+    });
+    const col_estimados = grupo_indicadores.map(([_,valor]) => {
+      const resultado = valor.pond_obt / valor.pond_est * 100;
+      return colorByPonderacion(resultado).replace(",1)",",.25)");
+    });
+    const textos = x_labels.map((valor, i) => {
+      const estimado = estimados[i];
+      const obtenido = obtenidos[i];
+      const faltante = estimado - obtenido;
+      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+    });
+    //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
+    Plotly.react("ranking2-2", 
+      [
+        {
+          type: "bar",
+          x: x_labels,
+          y: estimados,
+          cliponaxis: false,
+          textposition: 'outside',
+          texttemplate: '<b>%{y:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_estimados,
+            line: {color: col_estimados, width: 1}
+          },
+          /*hoverlabel: {
+            bgcolor: color_deseado,
+            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+          },*/
+          margin: { b: 150 },
+          showlegend: false,
+          name: 'Pond. Estimada',
+          hoverinfo: 'none'
+        },
+        {
+          type: "bar",
+          x: x_labels,
+          y: obtenidos,
+          text: textos,
+          cliponaxis: false,
+          textposition: 'inside',
+          texttemplate: '<b>%{y:.1f}</b>',
+          textfont: { size: 18, family: 'Noto Sans' },
+          marker: { 
+            color: col_obtenidos,
+            line: {color: col_estimados, width: 1}
+          },
+          hoverlabel: {
+            bgcolor: 'white',
+            font: { family: 'Noto Sans', color: 'black', size: 20}
+          },
+          margin: { b: 150 },
+          showlegend: false,
+          name: 'Pond. Obtenida',
+          hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,
+        }
+      ], 
+      {
+        height: 400,
+        width: 1246,
+        autosize: true,
+        title: {
+          text: `Ponderación obtenida vs estimada - ${unidad_deseada}, ${fecha_deseada}`,
+          font: { size: 24, color: "black" },
+          x: 0.5
+        },
+        /*yaxis: { title: "Valor" },*/
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        shadow: {
+          enabled: true,
+          color: 'rgba(0,0,0,0.2)',
+          x: 3,
+          y: 3,
+          blur: 10
+        },
+        uniformtext: {
+          minsize: 14   // Tamaño mínimo de fuente
+        },
+        barmode: 'overlay',
+        xaxis: {
+          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+          tickfont: {
+            size: 16,
+            weight: 'bold'
+          }
+        }
+      }
+    ); // ranking2
+  }
+
+  // -------------- COORDENADAS -------------------- //
+  latitudes = [16.3673,16.5853,16.4342,16.5548,16.8022,16.2022,16.3296,18.1065,15.7617,18.0829,18.0822,15.7363,17.3319,16.7944,
+               17.0782,17.0701,17.0672,16.8664,17.2101,17.2411,17.2818,17.7983,15.8635,18.1312,16.3395,17.6718,17.0723,17.0720];
+  longitudes = [-94.1915,-94.7655,-95.0146,-95.0882,-95.0962,-95.2019,-95.2329,-95.8807,-96.1296,-96.1378,-96.1379,-96.4722,-96.4871,-96.6764,
+                -96.7043,-96.7220,-96.7358,-96.7863,-96.7980,-96.8207,-96.8925,-96.9602,-97.0703,-97.0765,-98.0453,-97.5652,-96.7212,-96.7207];
+
+  unidades1 = ['UMF 01 Oaxaca','UMF 38 FFCC.','UMF 65 Sta Lucia del Camino','UMF 64 Tuxtepec','UMF 13 Cuicatlán','UMF 05 Sto.Dgo.Tehuantepec',
+              'UMF 06 Juchitán','UMF 17 Magdalena Apasco','UMF 12 Sto. Domingo Ingenio','UMF 23 Cd. Ixtepec','UMF 27 Ocotlán','UMF 31 Zimatlán de Álvarez',
+              'UMF 30 San Pedro Tapanatepec','UMF 40 Ixtlan de Juárez','UMF 32 Puerto Escondido','UMF 33 Pedro Pochutla','UMF 29 Barrio La Soledad',
+              'UMF 26 Pinotepa','UMF 58 Teotitlán','UMF 57 San Pablo Villa de Etla','UMF 56 San Pablo Huitzo','UMF 59 Loma Bonita','UMRM 21 Tamazulapan','UMAA Oaxaca'];
+  unidades2 = ['HGZ 01 Oaxaca','HGZMF 02 Salina Cruz','HGZ 03 Tuxtepec','HGSMF 41 Huatulco','Oaxaca'];
+
+  nombres_unidades = ['UMF 01 Oaxaca','UMF 38 FFCC.','UMF 65 Sta Lucia del Camino','UMF 64 Tuxtepec','UMF 13 Cuicatlán','UMF 05 Sto.Dgo.Tehuantepec',
+              'UMF 06 Juchitán','UMF 17 Magdalena Apasco','UMF 12 Sto. Domingo Ingenio','UMF 23 Cd. Ixtepec','UMF 27 Ocotlán','UMF 31 Zimatlán de Álvarez',
+              'UMF 30 San Pedro Tapanatepec','UMF 40 Ixtlan de Juárez','UMF 32 Puerto Escondido','UMF 33 Pedro Pochutla','UMF 29 Barrio La Soledad',
+              'UMF 26 Pinotepa','UMF 58 Teotitlán','UMF 57 San Pablo Villa de Etla','UMF 56 San Pablo Huitzo','UMF 59 Loma Bonita','UMRM 21 Tamazulapan','UMAA Oaxaca',
+              'HGZ 01 Oaxaca','HGZMF 02 Salina Cruz','HGZ 03 Tuxtepec','HGSMF 41 Huatulco','Oaxaca'];
+  const meses = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+  ];
+
+  mes_deseado = 'enero';
+  año_deseado = '2025';
+  fecha_deseada = mes_deseado.concat(' ', año_deseado);
+  console.log(fecha_deseada)
+  desempeño = 'Bajo';
+  color_deseado = 'red';
+  unidad_deseada = 'Oaxaca';
+  indicador_deseado = 'DM 01';
+  labels = ["Esperado", "Bajo", "Medio", "Sin datos"];
+  puntoResaltado = null;
+  n_indicadores = "--";
+  fechas = ['enero 2025', 'febrero 2025'];
+  
+  // ---------- RANKING ------------------ //
+  nivel_deseado = 'Primer Nivel';
+  procesos = ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'S.Ob'];
+  normativos = ['CUPN', 'CUSN', 'CVE', 'CES','CTE', 'IAAS', 'CIS'];
+
+  // ---------- HEADER HIDE/UNHIDE ----------- //
+  const fechas_1 = document.getElementById('calendario');
+  const fechas_2 = document.getElementById('fechas_chico');
+  const unidades_1 = document.getElementById('unidades_selector');
+
+  const selector = document.getElementById('unidad_select');
+
+  // ----------- FECHAS ------- //
+
+  window.addEventListener('scroll', () => {
+    const rect = fechas_1.getBoundingClientRect();
+    if (rect.bottom < 100) {
+      fechas_2.style.display = 'flex'; 
+      unidades_1.style.display = 'flex';
+    } else {
+      fechas_2.style.display = 'none';
+      unidades_1.style.display = 'none';
+    }
+  });
+
+
+  fetch("https://script.google.com/macros/s/AKfycbz0f3Y7rHNwbWDwcgPWYdbQ-C-aACwyU4_4WliqSStqKaMidZXzMDKcxCWaGKNx4SuHMg/exec") //"https://script.google.com/macros/s/AKfycbxbdwnq17ukuBOPxtHR52a12NcrR4V5LiTujKCPFWMKoYztEFmIBk6pyeyHG2UwVMamog/exec")
+    .then(response => response.json())
+    .then(data => {
+      data_1 = data.resultados;
+      datos = data_1.map(row => ({
+        fecha: formatearFecha(row['FECHA']),
+        unidad: row["UNIDAD"],
+        ind: row["IND"],
+        indicador: row["INDICADOR"],
+        nombre_indicador: row["NOMBRE INDICADOR"],
+        valor: parseFloat(row["VALOR"]),
+        color: calcularColor(row["VALOR"], row["ESPERADO"], row["MEDIO"], row["BAJO"]),
+        esperado: obtenerRangoNumero(row['ESPERADO']),
+        medio: obtenerRangoNumero(row['MEDIO']),
+        bajo: obtenerRangoNumero(row['BAJO']),
+        esperado_: row['ESPERADO'],
+        medio_: row['MEDIO'],
+        bajo_: row['BAJO']
+      }));
+      data_2 = data.ponderaciones;
+      datos_pond = data_2.map(row => ({
+        fecha: formatearFecha(row['FECHA']),
+        indicador: row['INDICADOR'],
+        unidad: row['UNIDAD MEDICA'],
+        ind: row['IND'],
+        pond_est: row['POND. ESTIMADA'],
+        pond_obt: row['POND. OBTENIDA'],
+        nivel: row['NIVEL']
+      }));
+    // console.log(datos, datos_pond);
+    console.log("Termina de preparar los datos. Comienza a graficar.");
+    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+    actualizarRankingPN(datos_pond, fecha_deseada);
+    actualizarRankingSN(datos_pond, fecha_deseada);
+    //actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+    document.getElementById('ranking_1N').hidden = true;
+    document.getElementById('ranking_2N').hidden = true;
+    document.getElementById('ranking2').hidden = true;
+    document.getElementById('ranking2-2').hidden = true;
+    // Set Oaxaca as selected
+    document.querySelectorAll("button").forEach(b => {
+      if (b.textContent == 'Oaxaca'){
+        b.classList.add('activo');
+      }
+    }); // remover estilo activo a todos.
+    document.getElementById('loader-overlay').style.display = 'none';
+    // Inicializar calendario
+    console.log(fechas);
+    updateYearDisplay();
+    updateSelectedMonth();
+    selector.value = unidad_deseada;
+    if (fecha_deseada == fechas[fechas.length - 1]){
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = true;
+    } else if (fecha_deseada == fechas[0]){      
+      document.getElementById('prev-month').disabled = true;
+      document.getElementById('next-month').disabled = false;
+    } else{
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = false;
+    }
+  });
+
+  Plotly.newPlot("ranking_1N",
+    [{
+      type: "bar",
+      x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+      y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+      cliponaxis: false,
+      texttemplate: ' ',
+      marker: { color: color_deseado },
+      hoverlabel: {
+        bgcolor: color_deseado,
+        font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+      },
+      margin: { b: 150 },
+      showlegend: false
+    }],
+    {
+      title: {
+        text: `Ranking de Primer Nivel, ${fecha_deseada}`,
+        font: { size: 24, color: "black" },
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: '#f9f9f9',
+      shadow: {
+        enabled: true,
+        color: 'rgba(0,0,0,0.2)',
+        x: 3,
+        y: 3,
+        blur: 10
+      },
+      uniformtext: {
+        minsize: 14   // Tamaño mínimo de fuente
+      }
+    }
+  ); // ranking_1N
+
+  Plotly.newPlot("ranking_2N",
+    [{
+      type: "bar",
+      x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+      y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+      cliponaxis: false,
+      texttemplate: ' ',
+      marker: { color: color_deseado },
+      hoverlabel: {
+        bgcolor: color_deseado,
+        font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+      },
+      margin: { b: 150 },
+      showlegend: false
+    }],
+    {
+      title: {
+        text: `Ranking de Segundo Nivel, ${fecha_deseada}`,
+        font: { size: 24, color: "black" },
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: '#f9f9f9',
+      shadow: {
+        enabled: true,
+        color: 'rgba(0,0,0,0.2)',
+        x: 3,
+        y: 3,
+        blur: 10
+      },
+      uniformtext: {
+        minsize: 14   // Tamaño mínimo de fuente
+      }
+    }
+  ); // ranking_2N
+
+  Plotly.newPlot("ranking2", 
+    [
+      {
+        type: "bar",
+        x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+        y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+        cliponaxis: false,
+        texttemplate: ' ',
+        marker: { 
+          color: 'rgba(0,88,78,1)',
+          line: {color: 'rgba(0,88,78,1)', width: 1}
+        },
+        hoverlabel: {
+          bgcolor: color_deseado,
+          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+        },
+        margin: { b: 150 },
+        showlegend: false,
+        name: 'Pond. Obtenida'
+      },
+      {
+        type: "bar",
+        x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+        y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+        cliponaxis: false,
+        texttemplate: ' ',
+        marker: { 
+          color: 'rgba(0,88,78,.25)',
+          line: {color: 'rgba(0,88,78,1)', width: 1}
+        },
+        hoverlabel: {
+          bgcolor: color_deseado,
+          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+        },
+        margin: { b: 150 },
+        showlegend: false,
+        name: 'Pond. Faltante'
+      }
+    ], 
+    {
+      title: {
+        text: `Ponderación por grupo indicador.`,
+        font: { size: 24, color: "black" },
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      shadow: {
+        enabled: true,
+        color: 'rgba(0,0,0,0.2)',
+        x: 3,
+        y: 3,
+        blur: 10
+      },
+      uniformtext: {
+        minsize: 14   // Tamaño mínimo de fuente
+      },
+      barmode: 'stack'
+    }
+  ); // ranking2  
+  //document.getElementById('div_ranking2').hidden = true;
+
+  Plotly.newPlot("ranking2-2", 
+    [
+      {
+        type: "bar",
+        x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+        y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+        cliponaxis: false,
+        texttemplate: ' ',
+        marker: { 
+          color: 'rgba(0,88,78,1)',
+          line: {color: 'rgba(0,88,78,1)', width: 1}
+        },
+        hoverlabel: {
+          bgcolor: color_deseado,
+          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+        },
+        margin: { b: 150 },
+        showlegend: false,
+        name: 'Pond. Obtenida'
+      },
+      {
+        type: "bar",
+        x: ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'Sob y Obesidad', 'CUPN', 'CUSN'],
+        y: [1, 0.75, 0.5, 0.25, 1, 0.8, 0.5, 0.25, 0.6],
+        cliponaxis: false,
+        texttemplate: ' ',
+        marker: { 
+          color: 'rgba(0,88,78,.25)',
+          line: {color: 'rgba(0,88,78,1)', width: 1}
+        },
+        hoverlabel: {
+          bgcolor: color_deseado,
+          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+        },
+        margin: { b: 150 },
+        showlegend: false,
+        name: 'Pond. Faltante'
+      }
+    ], 
+    {
+      title: {
+        text: `Ponderación por grupo indicador.`,
+        font: { size: 24, color: "black" },
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: 'rgba(0,0,0,0)',
+      shadow: {
+        enabled: true,
+        color: 'rgba(0,0,0,0.2)',
+        x: 3,
+        y: 3,
+        blur: 10
+      },
+      uniformtext: {
+        minsize: 14   // Tamaño mínimo de fuente
+      },
+      barmode: 'stack'
+    }
+  ); // ranking2  
+  //document.getElementById('div_ranking2-2').hidden = true;
+
+  Plotly.newPlot("desempeños", 
+    [{
+        type: "pie",
+        values: [1, 0, 0, 0],
+        labels: labels,
+        marker: {
+          colors: ["green", "red", "orange", "lightgray"]
+        },
+        textinfo: "label+percent",
+        insidetextorientation: "radial",
+        hole: 0.3,
+        textfont: {
+          size: 18
+        },
+        hoverinfo: 'label+percent+value',
+        hovertemplate: '<b>%{label}</b><br>%{percent:.1%}<br>Valor: %{value}<extra></extra>',
+      }], 
+      {
+        title: {
+          text: `Oaxaca`,
+          font: {
+            size: 24,
+            color: '#103134',//"black"
+            weight: '600'
+          },
+          x: 0.5,
+        },
+        annotations: [{  // Texto en el centro
+          text: `<b>No.<br>indicadores:<br><br><span style="font-size:30px; margin:25px;">${n_indicadores}</span><b>`,
+          font: { family: 'Noto Sans', size: 14, color: '#333' },
+          showarrow: false,
+          x: 0.5,  // Posición X (0-1)
+          y: 0.5,  // Posición Y (0-1)
+          xanchor: 'center',
+          yanchor: 'middle',
+          align: 'center'
+        }],
+        showlegend: false,
+        hoverlabel: {
+          shadow: {
+            color: 'rgba(0,0,0,0.5)',
+            x: 3,
+            y: 3,
+            blur: 10
+          }
+        },
+        plot_bgcolor: 'rgba(0,0,0,1)', // Fondo transparente
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        margin: { t: 40, b: 40, l: 30, r: 30 }, // Márgenes ajustados
+        font: {
+          family: 'Noto Sans',
+          color: '#333333'
+        },
+        hovermode: 'closest',
+        animations: {
+          enabled: true,
+          easing: 'elastic-in-out'
+        }
+      }
+  ); // desempeños
+
+  Plotly.newPlot("indicadores_1", 
+    [{
+      type: "bar",
+      x: ['01', '02', '03', '04'],
+      y: [1, 0.75, 0.5, 0.25],
+      cliponaxis: false,
+      texttemplate: ' ',
+      marker: { color: color_deseado },
+      hoverlabel: {
+        bgcolor: color_deseado,
+        font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
+      },
+      margin: { b: 150 },
+      showlegend: false
+    },
+    // Línea de pasos (valores esperados)
+    {
+      type: "scatter",
+      mode: "lines+markers",
+      x: ['01', '02', '03', '04'],
+      y: [1, 0, 0, 0],
+      name: "Valor esperado",
+      line: {
+        shape: "hvh",  // step graph: horizontal-vertical
+        color: 'black',
+        width: 2,
+        dash: 'dot' // (dot, dash)
+      },
+      marker: {
+        color: 'orange',
+        symbol: "cross-thin"
+      },
+      hovertemplate: "",
+      showlegend: false
+    }], 
+    {
+      title: {
+        text: `Indicadores con desempeño ${desempeño}, ${mes_deseado} ${año_deseado}`,
+        font: { size: 24, color: "black" },
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: '#f9f9f9',
+      shadow: {
+        enabled: true,
+        color: 'rgba(0,0,0,0.2)',
+        x: 3,
+        y: 3,
+        blur: 10
+      },
+      uniformtext: {
+        minsize: 14   // Tamaño mínimo de fuente
+      }
+    }
+  ); // indicadores_1
+
+  Plotly.newPlot("indicadores_2", 
+    [{
+      x: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+      y: [1, 0, 0, 0],
+      type: "bar",
+      marker: {
+        color: color_deseado 
+      }
+    },
+    {
+      type: "scatter",
+      mode: "lines+markers",
+      x: ['Enero', 'Febrero', 'Marzo', 'Abril'],
+      y: [1, 0, 0, 0],
+      name: "Valor esperado",
+      line: {
+        shape: "hvh",  // step graph: horizontal-vertical
+        color: 'black',
+        width: 2,
+        dash: 'dot' // (dot, dash)
+      },
+      marker: {
+        color: 'orange',
+        symbol: "cross-thin"
+      },
+      hovertemplate: "",
+      showlegend: false
+    }], {
+      title: {
+        text: `${indicador_deseado} - ${unidad_deseada}`,
+        x: 0.5
+      },
+      yaxis: { title: "Valor" },
+      plot_bgcolor: 'rgba(0,0,0,0)',
+      paper_bgcolor: '#f9f9f9'
+    }
+  ); // indicadores_2
+
+  let currentYear = new Date().getFullYear();
+  let selectedMonth = ((new Date().getMonth() - 1) <= 0) ? 1:new Date().getMonth() - 1;
+  mes_deseado = meses[selectedMonth-1];
+  año_deseado = currentYear;
+  fecha_deseada = mes_deseado.concat(' ', año_deseado);
+  //console.log('ho',selectedMonth);
+  // Inicializar
+  updateYearDisplay();
+  updateSelectedMonth();
+  // Navegación de años
+  document.querySelector('.previo').addEventListener('click', () => {
+    currentYear--;
+    updateYearDisplay();
+  });
+
+  document.querySelector('.siguiente').addEventListener('click', () => {
+    currentYear++;
+    updateYearDisplay();
+  });
+
+  // Selección de mes
+  document.querySelectorAll('.month-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedMonth = parseInt(this.dataset.month);
+      updateSelectedMonth();
+      
+      // Aquí puedes disparar el evento para actualizar tu dashboard
+      console.log(`Seleccionado: ${meses[selectedMonth-1]} ${currentYear}`);
+      mes_deseado = `${meses[selectedMonth-1]}`;
+      año_deseado = `${currentYear}`;
+      fecha_deseada = (`${meses[selectedMonth-1]} ${currentYear}`);//.toUpperCase();
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);      
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+      
+      // Checar las disponibilidad del boton en header
+      console.log(fecha_deseada, fechas);
+      if (fecha_deseada == fechas[fechas.length - 1]){
+        document.getElementById('prev-month').disabled = false;
+        document.getElementById('next-month').disabled = true;
+      } else if (fecha_deseada == fechas[0]){      
+        document.getElementById('prev-month').disabled = true;
+        document.getElementById('next-month').disabled = false;
+      } else{
+        document.getElementById('prev-month').disabled = false;
+        document.getElementById('next-month').disabled = false;
+      }
+    });
+  });
+
+  function updateYearDisplay() {
+    document.querySelector('.año-actual').textContent = currentYear;
+    document.getElementsByClassName('selected-year')[0].textContent = currentYear;
+    document.getElementsByClassName('selected-year')[1].textContent = currentYear;
+
+    // Actualizar estado habilitado/deshabilitado de botones de mes
+    document.querySelectorAll('.month-btn').forEach(btn => {
+      const mesTexto = meses[parseInt(btn.dataset.month) - 1].toLowerCase();
+      const fechaTexto = `${mesTexto} ${currentYear}`.toLowerCase();
+
+      if (fechas.includes(fechaTexto)) {
+        btn.disabled = false;
+        btn.classList.remove('disabled'); // Opcional para estilo
+      } else {
+        btn.disabled = true;
+        btn.classList.add('disabled'); // Opcional para estilo visual
+      }
+    });
+  }
+
+  function updateSelectedMonth() {
+    document.getElementsByClassName('selected-month')[0].textContent = meses[selectedMonth-1];
+    document.getElementsByClassName('selected-month')[1].textContent = meses[selectedMonth-1];
+    
+    // Resaltar el mes actual
+    document.querySelectorAll('.month-btn').forEach(btn => {
+      btn.classList.remove('selected');
+      if(parseInt(btn.dataset.month) === selectedMonth) {
+        btn.classList.add('selected');
+      }
+    });
+    // Checar las disponibilidad del boton en header
+    console.log(fecha_deseada, fechas);
+    if (fecha_deseada == fechas[fechas.length - 1]){
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = true;
+    } else if (fecha_deseada == fechas[0]){      
+      document.getElementById('prev-month').disabled = true;
+      document.getElementById('next-month').disabled = false;
+    } else{
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = false;
+    }
+  }
+
+  document.getElementById('prev-month').addEventListener('click', () => {    
+    selectedMonth--;
+    if (selectedMonth < 1) {
+      selectedMonth = 12;
+      currentYear--;
+    }
+    updateSelectedMonth();
+    updateYearDisplay();
+    fecha_deseada = (`${meses[selectedMonth-1]} ${currentYear}`);//.toUpperCase();
+
+    if (fecha_deseada == fechas[0]){
+      console.log('Es la primera fecha');
+      document.getElementById('prev-month').disabled = true;
+      document.getElementById('next-month').disabled = false;
+    } else{      
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = false;
+    }
+
+    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+    actualizarRankingPN(datos_pond, fecha_deseada);      
+    actualizarRankingSN(datos_pond, fecha_deseada);
+    actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);    
+  });
+
+  document.getElementById('next-month').addEventListener('click', () => {
+    selectedMonth++;
+    if (selectedMonth > 12) {
+      selectedMonth = 1;
+      currentYear++;
+    }
+    updateSelectedMonth();
+    updateYearDisplay();
+    fecha_deseada = (`${meses[selectedMonth-1]} ${currentYear}`);//.toUpperCase();
+
+    if (fecha_deseada == fechas[fechas.length - 1]){
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = true;
+    } else{      
+      document.getElementById('prev-month').disabled = false;
+      document.getElementById('next-month').disabled = false;
+    }
+
+    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+    actualizarRankingPN(datos_pond, fecha_deseada);      
+    actualizarRankingSN(datos_pond, fecha_deseada);
+    actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada); 
+  });
+
+  console.log('Terminó una gráfica, empezando a comunicarse.');
+  document.getElementById('loader-overlay').style.display = 'flex';
+
+  // ---------- 8 -------------
+  
+  const contenedor1 = document.getElementById("botones1");
+  unidades1.forEach(unidad => {
+    const btn = document.createElement("button");
+    btn.className = 'btn-unidad';
+    btn.textContent = unidad;
+
+    // Evento click
+    btn.addEventListener("click", () => {
+      unidad_completa = nombres_unidades.find(nombre => nombre.startsWith(unidad));
+      console.log(unidad_completa);
+      selector.value = unidad_completa;
+      if (unidad_completa == 'UMAA Oaxaca'){
+        document.getElementById('ranking_1N').hidden = true;
+        document.getElementById('ranking2').hidden = true;
+        document.getElementById('rank_unidad_1').hidden = true; 
+      }else{
+        document.getElementById('ranking_1N').hidden = false;
+        document.getElementById('ranking2').hidden = false;
+        document.getElementById('rank_unidad_1').hidden = false; 
+      }
+      if (unidad_completa == 'HGSMF 41 Huatulco' || unidad_completa == 'HGZMF 02 Salina Cruz'){
+        document.getElementById('ranking_2N').hidden = false;
+        document.getElementById('ranking2-2').hidden = false;
+        document.getElementById('rank_unidad_2').hidden = false;
+      } else{
+        document.getElementById('ranking_2N').hidden = true;
+        document.getElementById('ranking2-2').hidden = true;
+        document.getElementById('rank_unidad_2').hidden = true;
+      }
+      // Remover la clase activa de todos los botones
+      document.querySelectorAll("#botones2 button","#botones1 button").forEach(b => {
+        document.querySelectorAll("button").forEach(b => b.classList.remove("activo")); // remover estilo activo a todos.
+        btn.classList.add("activo");  // asignar estilo activo solo a uno.        
+      });
+
+      unidad_deseada = unidad_completa;
+      document.getElementById('selected-unit').textContent = unidad_deseada;
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+    });    
+    contenedor1.appendChild(btn);
+  });
+
+  const contenedor2 = document.getElementById("botones2");
+  unidades2.forEach(unidad => {
+    const btn = document.createElement("button");
+    btn.className = 'btn-unidad';
+    btn.textContent = unidad;
+    //unidad_completa = nombres_unidades.find(nombre => nombre.startsWith(unidad));
+
+    btn.addEventListener("click", () => {
+      unidad_completa = nombres_unidades.find(nombre => nombre.startsWith(unidad));
+      console.log(unidad_completa);
+      selector.value = unidad_completa;
+      if (unidad_completa == 'HGSMF 41 Huatulco' || unidad_completa == 'HGZMF 02 Salina Cruz'){
+        document.getElementById('ranking_1N').hidden = false;
+        document.getElementById('ranking2').hidden = false;
+        document.getElementById('rank_unidad_1').hidden = false;
+      } else{
+        document.getElementById('ranking_1N').hidden = true;
+        document.getElementById('ranking2').hidden = true;
+        document.getElementById('rank_unidad_1').hidden = true;
+      }
+      if (unidad_completa == 'Oaxaca'){
+        document.getElementById('ranking_1N').hidden = true;
+        document.getElementById('ranking_2N').hidden = true;
+        document.getElementById('ranking2').hidden = true;
+        document.getElementById('ranking2-2').hidden = false;
+        document.getElementById('rank_unidad_2').hidden = false;
+        //document.getElementById('ranking2-2').hidden = true;
+      } else{
+        document.getElementById('ranking_2N').hidden = false;
+        document.getElementById('ranking2-2').hidden = false;
+        document.getElementById('rank_unidad_2').hidden = false;
+      }
+      // Remover la clase activa de todos los botones
+      document.querySelectorAll("#botones1 button", "#botones2 button").forEach(b => {
+        document.querySelectorAll("button").forEach(b => b.classList.remove("activo")); // remover estilo activo a todos.
+        btn.classList.add("activo");  // asignar estilo activo solo a uno.
+      });
+
+      unidad_deseada = unidad_completa;
+      document.getElementById('selected-unit').textContent = unidad_deseada;
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      if (unidad_deseada == 'Oaxaca'){
+        console.log('Entramos a delegacional')
+        actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+      }
+    });    
+    contenedor2.appendChild(btn);
+  });
+
+  selector.addEventListener('change', () => {
+    const value = selector.value;
+    unidad_deseada = value;
+    document.getElementById('selected-unit').textContent = unidad_deseada;
+    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+    actualizarRankingPN(datos_pond, fecha_deseada);
+    actualizarRankingSN(datos_pond, fecha_deseada);
+    actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+    actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+    updateActiveButton(unidad_deseada);
+  });
+
+  // Limpiar opciones existentes (si las hay)
+  selector.innerHTML = '';
+
+  // Agregar opciones basadas en tus arrays
+  unidades1.forEach((unidad) => {
+    const option = document.createElement("option");
+    option.value = unidad; 
+    option.textContent = unidad;  // Usar el primer array para el texto visible
+    selector.appendChild(option);
+  });
+  unidades2.forEach((unidad) => {
+    const option = document.createElement("option");
+    option.value = unidad; 
+    option.textContent = unidad;  // Usar el primer array para el texto visible
+    selector.appendChild(option);
+  });
+
+  document.getElementById("desempeños").on('plotly_click', function(data3) {
+    var punto = data3.points[0];
+    desempeño = punto.label;
+    n_indicadores = punto.value;
+    console.log(desempeño);
+    // Actualizando Graficas
+    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+  });
+
+  document.getElementById("indicadores_1").on('plotly_click', function(data4) {
+    var punto = data4.points[0];
+    indicador_deseado = punto.x;
+    // console.log('click en:',punto);
+    // Actualizando Graficas
+    actualizarGrafica4(datos, unidad_deseada, indicador_deseado, desempeño);
+  });
+
+  document.getElementById('ranking_1N').on('plotly_click', function(data5) {
+    var punto = data5.points[0];
+    unidad_deseada = punto.x;
+    if (unidad_deseada != 'Promedio'){
+      selector.value = unidad_deseada;
+      document.getElementById('selected-unit').textContent = unidad_deseada;
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      updateActiveButton(unidad_deseada);
+    }
+  });
+
+  document.getElementById('ranking_2N').on('plotly_click', function(data5) {
+    var punto = data5.points[0];
+    unidad_deseada = punto.x;
+    if (unidad_deseada != 'Promedio'){
+      selector.value = unidad_deseada;
+      document.getElementById('selected-unit').textContent = unidad_deseada;
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      updateActiveButton(unidad_deseada);
+    }
+  });
+
+  </script>
+</body>
+</html>
