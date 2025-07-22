@@ -1454,6 +1454,8 @@
 
     const cuerpoTabla_peor = document.getElementById('cuerpo_peor');
     const cuerpoTabla_mejor = document.getElementById('cuerpo_mejor');
+    cuerpoTabla_peor.innerHTML = "";
+    cuerpoTabla_mejor.innerHTML = "";
     // -----------------------------------------------
     Object.entries(peores_sort).map(([indicador, valores]) => {
       // Dividir entre procesos / normativos
