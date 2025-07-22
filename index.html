@@ -6,6 +6,23 @@
   <title>INDICADORES</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <!-- Your Firebase config -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "allind-13666.firebaseapp.com",
+      databaseURL: "https://allind-13666-default-rtdb.firebaseio.com",
+      projectId: "allind-13666",
+      storageBucket: "allind-13666.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <style>
     :root{
       --ancho: 100%;
@@ -20,6 +37,9 @@
       padding: 20px 20px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       z-index: 1000;
+
+      /*transform: scale(1) !important;*/
+      font-size: 20px;
     }
     body { 
       font-family: sans-serif; 
@@ -71,14 +91,15 @@
       max-width: 60%;
     }
     #desempeños {
-      flex: 1;
-      /*width: 100%;*/
+      /*flex: 1;*/
+      max-width: 20%;
       background: white;
       border-radius: 16px;
       padding: 20px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
       border: 1px solid rgba(0,0,0,0.05);
+      font-size: 12px;
       /*overflow: hidden;*/
       margin-left: auto;
       margin-right: auto;
@@ -102,6 +123,8 @@
       border: 1px solid rgba(0,0,0,0.05);
       margin-left: auto;
       margin-right: auto;
+      max-width: 30%;
+      /*width: 30%;*/
     }
     #ranking2 .hovertext text{ 
       /*
@@ -109,8 +132,8 @@
       transform: translate(10px);
       transform: rotate(-60deg); 
     }
-    #indicadores_1 {
-      height: 700px;
+    #indicadores_1, #indicadores_2, #numden {
+      /*height: 700px;*/
       background: white;
       border-radius: 16px;
       padding: 20px;
@@ -120,18 +143,10 @@
       /*overflow: hidden;*/
       margin-left: auto;
       margin-right: auto;
+      /*width: 80%;*/
     }
-    #indicadores_2 {
-      height: 650px;
-      background: white;
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-      font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
-      border: 1px solid rgba(0,0,0,0.05);
-      /*overflow: hidden;*/
-      margin-left: auto;
-      margin-right: auto;
+    #numden{
+      /*max-width: 30%;*/
     }
 
     .btn-unidad{
@@ -305,8 +320,9 @@
       justify-content: center;
       gap: 10px;
       min-height: 46px;
-      width: 300px;
       align-items: center;
+      width: 300px;
+      height: 45px;
     }
     #selected-month {
       font-weight: 600;
@@ -370,12 +386,13 @@
       padding: 10px;
       font-size: 22px;
       justify-content: center;
-      height: 35px;
       vertical-align: center;
+      height: 40px;
     }
     .rank_title{
       font-size: 12px;
       font-weight: 500;
+      height: 15px;
     }
     
     .compact-date-picker {
@@ -387,10 +404,10 @@
       border-radius: 30px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
       /*min-width: 200px;*/
-      width: fit-content;
       display: none;
       margin-left: auto;
       height: 30px;
+      width: fit-content;
     }
     .nav-btn-2 {
       border: none;
@@ -430,10 +447,10 @@
       padding: 8px 15px;
       border-radius: 30px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      width: fit-content;
       display: none;
       margin-right: 30px;
       height: 30px;
+      width: fit-content;
     }
     #unidad_select {
       /*padding: 10px 20px;*/
@@ -555,14 +572,15 @@
 
   <div class="contenedor">
     <div id="desempeños" class="grafica"></div>
-  </div>
-
-  <div class="contenedor">
     <div id="indicadores_1" class="grafica"></div>
   </div>
 
+  <!--<div class="contenedor">
+  </div>-->
+
   <div class="contenedor">
-    <div id="indicadores_2" class="grafica"></div>    
+    <div id="indicadores_2" class="grafica"></div> 
+    <div id="numden" class="grafica"></div>   
   </div>
 
   <div id="analisis_1" hidden>
@@ -571,40 +589,167 @@
     </div>
 
     <div class="contenedor">
-      <table id="tabla" style="font-family: 'Noto Sans'; font-size: 16px; border-collapse: collapse; width: 100%;">
+      <!-- ---------------------- TABLA PRINCIPAL --------------------------- -->
+      <table id="tabla" style="font-family: 'Noto Sans'; font-size: 16px; border-collapse: collapse; width: 100%; vertical-align: top;">
           <thead id="encabezado_tabla">
             <tr style="background-color: 'rgba(0,0,0,0)';">
-              <th style="padding: 8px; border: 1px none; width: 50%; text-align:left; font-size:25px;">Indicadores cercanos a cambiar.</th>
-              <th style="padding: 8px; border: 1px none; width: 50%; text-align:left; font-size:25px;">-.</th>
+              <!-- ------------------ ENCABEZADOS PRINCIPALES --------------------- -->
+              <th style="padding: 8px; border: 1px none; width: 35%; text-align:left; font-size:25px;">Indicadores cercanos a cambiar.</th>
+              <th colspan="2" style="padding: 8px; border: 1px none; width: 65%; text-align:center; font-size:25px;">Comparación indicadores</th>
             </tr>
           </thead>
-          <tbody >
-            <td id="cuerpo_tabla" style="text-align: justify; margin-right: 5px;">Texto explicativo</td>
+          <tbody>
+            <td style="text-align: justify; margin-right: 15px; padding: 15px; vertical-align: top;">
+              <div id="cuerpo_tabla" style="width: 90%;">Texto explicativo</div>
+              <!-- ------------------ TABLA ANALISIS 1 --------------------- -->
+              <table id="tabla_1" style="font-family: 'Noto Sans'; font-size: 14px; border-collapse: collapse; vertical-align: top;">
+                <thead>
+                  <tr style="background-color: #f0f0f0;">
+                    <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Indicador</th>
+                    <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Valor</th>
+                    <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Error</th>
+                    <th style="padding: 8px; border: 1px none #ccc;" colspan="1"; >Semaforización</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo_tabla_1">
+                  <!-- Las filas se llenarán desde JavaScript -->
+                </tbody>
+              </table>
+            </td>
+            <td style="vertical-align: top;"> 
+              <!-- ------------------ TABLA DIFERENCIAS 1 --------------------- -->
+              <table style="width: 90%; border-collapse: collapse; vertical-align: top;">
+                <thead>
+                  <tr>
+                    <th style="background-color: #f0f0f0; padding: 8px; border: 1px none; width: 35%; text-align:center;">Indicador</th>
+                    <th style="background-color: #f0f0f0; padding: 8px; border: 1px none; width: 20%; text-align:center;" id="fecha_anterior_header">Fecha anterior</th>
+                    <th style="background-color: #f0f0f0; padding: 8px; border: 1px none; width: 20%; text-align:center;" id="fecha_actual_header">Fecha actual</th>
+                    <th style="background-color: #f0f0f0; padding: 8px; border: 1px none; width: 25%; text-align:center;">Diferencia</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo_indi">
+                  <!-- Codigo JS -->
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <!--<div>Indicadores que disminuyeron</div> -->
+              <!-- ------------------ TABLA DIFERENCIAS 2 EMPEORAR --------------- -->
+              <table style="width: 90%; border-collapse: collapse; vertical-align: top;">
+                <thead>
+                  <tr>
+                    <th style="padding: 8px; border: 1px none; width: 35%; text-align:center; background-color: red; color: white;">Indicador</th>
+                    <th id="fecha_ant_emp" style="padding: 8px; border: 1px none; width: 20%; text-align:center; background-color: red; color: white;">Fecha anterior</th>
+                    <th id="fecha_act_emp" style="padding: 8px; border: 1px none; width: 20%; text-align:center; background-color: red; color: white;">Fecha actual</th>
+                    <th style="padding: 8px; border: 1px none; width: 25%; text-align:center; background-color: red; color: white;">Diferencia</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo_peor">
+                  <!-- Codigo JS -->
+                </tbody>
+              </table>
+              <!--<div>Indicadores que mejoraron</div> -->
+              <!-- ------------------ TABLA DIFERENCIAS 2 MEJORAR --------------- -->
+              <table style="width: 90%; border-collapse: collapse; vertical-align: top;">
+                <thead>
+                  <tr>
+                    <th style="padding: 8px; border: 1px none; width: 35%; text-align:center; color: white; background-color: green;">Indicador</th>
+                    <th id="fecha_ant_mej" style="padding: 8px; border: 1px none; width: 20%; text-align:center; color: white; background-color: green;">Fecha anterior</th>
+                    <th id="fecha_act_mej" style="padding: 8px; border: 1px none; width: 20%; text-align:center; color: white; background-color: green;">Fecha actual</th>
+                    <th style="padding: 8px; border: 1px none; width: 25%; text-align:center; color: white; background-color: green;">Diferencia</th>
+                  </tr>
+                </thead>
+                <tbody id="cuerpo_mejor">
+                  <!-- Codigo JS -->
+                </tbody>
+              </table>
+            </td>
           </tbody>
         </table>
     </div>
 
     <div class="contenedor">
       <div class="contenedor_2">
-        <table id="tabla_1" style="font-family: 'Noto Sans'; font-size: 14px; border-collapse: collapse; width: 80%;">
-          <thead>
-            <tr style="background-color: #f0f0f0;">
-              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Indicador</th>
-              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Valor</th>
-              <th style="padding: 8px; border: 1px none #ccc;" rowspan="1"; >Error</th>
-              <th style="padding: 8px; border: 1px none #ccc;" colspan="1"; >Semaforización</th>
-            </tr>
-          </thead>
-          <tbody id="cuerpo_tabla_1">
-            <!-- Las filas se llenarán desde JavaScript -->
-          </tbody>
-        </table>
+        
       </div>
       <!--- --->
     </div>
   </div>
 
   <script>
+  function filtrarNumDen(datos, indicadorSeleccionado){
+    return datos.filter(d =>
+      d.indicador === indicadorSeleccionado
+    );
+  }
+
+  function addLine(id, x2, y2, color_line, name_line){
+    Plotly.addTraces(id, {
+      x: x2,
+      y: y2,
+      mode: 'lines',
+      line: {color: color_line},
+      name: name_line,
+      hoverinfo: 'skip',
+    });
+  }
+
+  function addPoint(id, x1, x2, y1, y2, f, color_line, name_line){
+    x_ = x2.toLocaleString('es-mx', {maximumFractionDigits: 2});
+    y_ = y2.toLocaleString('es-mx', {maximumFractionDigits: 2});
+    punto_res = (y2/x2*f).toLocaleString('es-mx', {maximumFractionDigits: 2});
+    Plotly.addTraces(id, {
+      x: [x1, x2],
+      y: [y1, y2],
+      mode: 'lines',
+      line: {
+        dash: 'dot',
+        color: color_line
+        //width: 2
+      },
+      showlegend: false,
+      hoverinfo: 'skip',
+    });
+    Plotly.addTraces(id, {
+      x: [x2],
+      y: [y2],
+      type: 'scatter',
+      mode: 'markers',
+      marker: {
+        symbol: 'star',
+        size: 10,
+        color: color_line,
+        line: {color: 'black', width: 0.75}
+      },
+      name: name_line,
+      text: `${y_} ; ${x_} --> <b>${punto_res}</b>`,
+      hoverinfo: 'text'
+    });
+  }
+
+  function addActualPoint(id, punto_den, punto_num, color_line, f, res){
+    const punto_res = ((punto_num / punto_den) * f).toLocaleString('es-mx', {maximumFractionDigits: 2});
+    const punto_num_ = punto_num.toLocaleString('es-mx', {maximumFractionDigits: 2});
+    const punto_den_ = punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2});
+    Plotly.addTraces(id, {
+      x: [punto_den],
+      y: [punto_num],
+      //mode: 'markers+text',
+      type: 'scatter',
+      marker: {
+        color: color_line,
+        size: 10
+      },
+      /*text: [`${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})} / ${punto_num.toLocaleString('es-mx', {maximumFractionDigits: 2})} * ${f} = ${res}`],*/
+      text: `${punto_num_} ; ${punto_den_} --> <b>${punto_res}</b>`,
+      hoverinfo: 'text',
+      /*hovertemplate: '',*/
+      textposition: 'top left',
+      name: 'Punto actual',
+      //hoverinfo: 'skip',
+    });
+  }
+
   // Función para actualizar el botón activo
   function updateActiveButton(comparacion) {
     document.querySelectorAll("#botones2 button","#botones1 button").forEach(b => {
@@ -628,6 +773,95 @@
     if (resultado >= 80) return 'rgba(0,88,78,1)';
     if (resultado >= 60) return 'rgba(255,192,0,1)';
     return 'rgba(255,0,0,1)';
+  }
+
+  function agruparRanking(datos_pond){
+    const resultado_2 = {
+      inds: {},
+      pond_proc_obt: 0,
+      pond_norm_obt: 0,
+      pond_proc_est: 0,
+      pond_norm_est: 0,
+      pond_aju: 0,
+      color: 'orange'
+    };
+
+    datos_pond.forEach(row => {
+      const indicador = row.indicador;
+      const ind = row.ind;
+      const pond_est = parseFloat(row.pond_est) || 0;
+      const pond_obt = parseFloat(row.pond_obt) || 0;
+      const unidad = row.unidad;
+
+      // Inicializa estructura
+
+      // Inicializa estructura para grupo indicador si no existe
+      if (!resultado_2.inds[ind]){
+        resultado_2.inds[ind] = {
+          indicadores: {},
+          pond_obt: 0,
+          pond_est: 0          
+        };
+      }
+
+      // Inicializa estructura para indicador si no existe
+      if (!resultado_2.inds[ind].indicadores[indicador]){
+        resultado_2.inds[ind].indicadores[indicador] = {
+          pond_obt: 0,
+          pond_est: 0          
+        };
+      }
+
+      // Inicializa estructura para indicador si no existe
+      if (!resultado_2.inds[ind].indicadores[indicador]){
+        resultado_2.inds[ind].indicadores[indicador] = {
+          pond_obt: 0,
+          pond_est: 0          
+        };
+      }
+
+      // Suma los valores en el indicador
+      resultado_2.inds[ind].indicadores[indicador].pond_obt += pond_obt;
+      resultado_2.inds[ind].indicadores[indicador].pond_est += pond_est;
+
+      // Suma los valores en el grupo indicador
+      resultado_2.inds[ind].pond_obt += pond_obt;
+      resultado_2.inds[ind].pond_est += pond_est;
+
+      // Suma los totales del indicador
+      if (procesos.includes(ind)){
+        resultado_2.pond_proc_obt += pond_obt*0.6;
+        resultado_2.pond_proc_est += pond_est*0.6;
+      } else if (normativos.includes(ind)){
+        resultado_2.pond_norm_obt += pond_obt*0.4;
+        resultado_2.pond_norm_est += pond_est*0.4;
+      }
+    });
+
+    //console.log(resultado_2);
+    // Calcula pond_aju para cada indicador
+    resultado_2.pond_aju = ((resultado_2.pond_proc_obt/resultado_2.pond_proc_est*60) + (resultado_2.pond_norm_obt/resultado_2.pond_norm_est*40));
+    if (resultado_2.pond_aju >= 80) {
+        resultado_2.color = 'green';
+      } else if (resultado_2.pond_aju >= 60){
+        resultado_2.color = 'orange';
+      } else {
+        resultado_2.color = 'red';
+      }
+    /*  
+    Object.values(resultado_2).forEach(obj => {
+      console.log(pond_proc_obt);
+      obj.pond_aju = ((obj.pond_proc_obt/obj.pond_proc_est*60) + (obj.pond_norm_obt/obj.pond_norm_est*40));
+      if (obj.pond_aju >= 80) {
+        obj.color = 'green';
+      } else if (obj.pond_aju >= 60){
+        obj.color = 'orange';
+      } else {
+        obj.color = 'red';
+      }
+    });*/
+    console.log(resultado_2);
+    return resultado_2;
   }
 
   function analisisRanking(datos_pond_fecha, nivel){
@@ -940,7 +1174,8 @@
         pull: pulled,
         hole: 0.3,
         textfont: {
-          size: 18
+          size: 12,
+          weight: 'bold'
         },
         hoverinfo: 'none',//'label+percent+value',
         hovertemplate: '<b>%{label}</b><br>%{percent:.1%}<br>Valor: %{value}<extra></extra>',
@@ -957,8 +1192,8 @@
           //position: "center middle"
         },
         annotations: [{  // Texto en el centro
-          text: `<b>No.<br>Indicadores:<br><br><span style="font-size:30px; margin:25px;">${n_indicadores}</span><b>`,
-          font: { family: 'Noto Sans', size: 14, color: '#333' },
+          text: `<b>No.<br>Indicadores:<br><br><span style="font-size:20px; margin:25px;">${n_indicadores}</span><b>`,
+          font: { family: 'Noto Sans', size: 11, color: '#333' },
           showarrow: false,
           x: 0.5,  // Posición X (0-1)
           y: 0.5,  // Posición Y (0-1)
@@ -977,7 +1212,7 @@
         },
         plot_bgcolor: 'rgba(0,0,0,0)', // Fondo transparente
         paper_bgcolor: 'rgba(0,0,0,0)',
-        margin: { t: 40, b: 40, l: 30, r: 30 }, // Márgenes ajustados
+        margin: { t: 40, b: 40, l: 0, r: 0 }, // Márgenes ajustados
         font: {
           family: 'Noto Sans',
           color: '#333333'
@@ -1006,14 +1241,14 @@
     }
 
     const datosFiltrados2 = filtrarDesempeño(datosFiltrados, color_deseado);
-    // console.log('DATOS FILTRADOS 2: ',datosFiltrados2);
+    console.log('DATOS FILTRADOS 2: ',datosFiltrados2);
     // Calcular errores y armar nuevo array
     const datosConError = filtrarErrores(datosFiltrados2);
     const datosConError2 = datosConError.slice();
 
     // Ordenar por valor absoluto del error de menor a mayor
     datosConError2.sort((a, b) => Math.abs(a.error) - Math.abs(b.error));
-    //console.log(datosConError, datosConError2);
+    console.log(datosConError, datosConError2);
     /*
     */
     // Crear arrays para la gráfica
@@ -1079,7 +1314,7 @@
           font: { size: 24, color: "black" },
           x: 0.5
         },
-        margin: { b: 100 },
+        margin: { b: 100, r: 5, l: 50, t:80 },
         //xaxis: { title: "Indicador" },
         yaxis: { title: "Valor" },
         plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1128,6 +1363,130 @@
       `;
       cuerpoTabla_1.appendChild(fila);    
     }
+
+    // ---------------------- ANALISIS 2 -------------------------------
+    datos_mes_act = filtrarUnidadFecha(datos_pond, unidad_deseada, fecha_deseada);
+    [mes, año] = fecha_deseada.split(' ');
+    mes_ant = meses[meses.indexOf(mes) - 1];
+    fecha_ant = mes_ant + ' ' + año
+    datos_mes_ant = filtrarUnidadFecha(datos_pond, unidad_deseada, fecha_ant);
+    
+    rank_mes_act = agruparRanking(datos_mes_act);
+    rank_mes_ant = agruparRanking(datos_mes_ant);
+
+    //console.log(fecha_deseada ,datos_mes_act, fecha_ant, datos_mes_ant);
+    const a = rank_mes_act.inds;
+
+    const cuerpoTabla_2 = document.getElementById('cuerpo_indi');
+    cuerpoTabla_2.innerHTML = '';
+    Object.entries(rank_mes_act.inds).map(([indicador, valores]) => {
+      const pond_act = valores.pond_obt;
+      const pond_ant = rank_mes_ant.inds[indicador].pond_obt || 0;
+      let pond_comp = pond_act - pond_ant; 
+
+      // Dividir entre procesos / normativos
+      if (procesos.includes(indicador)){ pond_comp = (pond_comp * 0.6); } 
+      else if (normativos.includes(indicador)){ pond_comp = (pond_comp * 0.4); }
+
+      if (pond_comp == 0){ 
+        pond_comp = `—${pond_comp.toFixed(2)}`; 
+        color_text = 'black';
+      } else if (pond_comp > 0){ 
+        pond_comp = `▲${pond_comp.toFixed(2)}`; 
+        color_text = "green";
+      } else if (pond_comp < 0){ 
+        pond_comp = `▼${Math.abs(pond_comp).toFixed(2)}`; 
+        color_text = 'red';
+      }
+
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td style="padding: 4px; border: 1px solid #ccc;"><b>${indicador}</b></td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${pond_act.toFixed(2)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${pond_ant.toFixed(2)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center; color: ${color_text}"><b>${pond_comp}</b></td>
+      `;//*/
+        cuerpoTabla_2.appendChild(fila);
+    });
+
+    // ------------------- HEADERS DE LAS TABLAS ------------------------
+    const header_1 = document.getElementById('fecha_actual_header');
+    const header_2 = document.getElementById('fecha_anterior_header');
+    const header_3 = document.getElementById('fecha_act_emp');
+    const header_4 = document.getElementById('fecha_ant_emp');
+    const header_5 = document.getElementById('fecha_act_mej');
+    const header_6 = document.getElementById('fecha_ant_mej');
+    header_1.innerHTML = `${fecha_deseada}`;
+    header_2.innerHTML = `${fecha_ant}`;
+    header_3.innerHTML = `${fecha_deseada}`;
+    header_4.innerHTML = `${fecha_ant}`;
+    header_5.innerHTML = `${fecha_deseada}`;
+    header_6.innerHTML = `${fecha_ant}`;
+
+    // ------------------------ ANALISIS 3 ----------------------------
+    peores = {};
+    mejores = {};
+    Object.entries(datos_mes_act).map(([indicador, valores]) => {
+      const pond_act = valores.pond_obt;
+      const pond_ant = datos_mes_ant[indicador].pond_obt || 0;
+      let pond_comp = pond_act - pond_ant; 
+      //console.log(`${valores.indicador} actual: ${pond_act} // anterior: ${pond_ant} `);
+      if (pond_comp < 0){
+        peores[valores.indicador] = {
+          'pond_act': pond_act,
+          'pond_ant': pond_ant,
+          'pond_comp': pond_comp.toFixed(2)
+        }
+      } else if (pond_comp > 0){
+        mejores[valores.indicador] = {
+          'pond_act': pond_act,
+          'pond_ant': pond_ant,
+          'pond_comp': pond_comp.toFixed(2)
+        }
+      }
+    });
+    //console.log(peores, mejores);
+    const peores_sort_ = Object.entries(peores).sort(([, a], [, b]) => a.pond_comp - b.pond_comp);
+    const peores_sort = Object.fromEntries(peores_sort_);
+    const mejores_sort_ = Object.entries(mejores).sort(([, a], [, b]) => b.pond_comp - a.pond_comp);
+    const mejores_sort = Object.fromEntries(mejores_sort_);
+    //console.log(peores_sort, mejores_sort);
+
+    const cuerpoTabla_peor = document.getElementById('cuerpo_peor');
+    const cuerpoTabla_mejor = document.getElementById('cuerpo_mejor');
+    // -----------------------------------------------
+    Object.entries(peores_sort).map(([indicador, valores]) => {
+      // Dividir entre procesos / normativos
+      if (procesos.includes(indicador)){ valores.pond_comp = (valores.pond_comp * 0.6); } 
+      else if (normativos.includes(indicador)){ valores.pond_comp = (valores.pond_comp * 0.4); }
+
+      let pond_comp = `▼${Math.abs(valores.pond_comp).toFixed(3)}`;       
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td style="padding: 4px; border: 1px solid #ccc;"><b>${indicador}</b></td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_act.toFixed(3)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_ant.toFixed(3)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center; color: red; "><b>${pond_comp}</b></td>
+      `;//*/
+        cuerpoTabla_peor.appendChild(fila);
+    });
+    Object.entries(mejores_sort).map(([indicador, valores]) => {
+      // Dividir entre procesos / normativos
+      if (procesos.includes(indicador)){ valores.pond_comp = (valores.pond_comp * 0.6); } 
+      else if (normativos.includes(indicador)){ valores.pond_comp = (valores.pond_comp * 0.4); }
+
+      let pond_comp = `▲${Math.abs(valores.pond_comp).toFixed(3)}`;       
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td style="padding: 4px; border: 1px solid #ccc;"><b>${indicador}</b></td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_act.toFixed(3)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_ant.toFixed(3)}</td>
+        <td style="padding: 4px; border: 1px solid #ccc; text-align: center; color: green; "><b>${pond_comp}</b></td>
+      `;//*/
+        cuerpoTabla_mejor.appendChild(fila);
+    });
+
+
     return indicadores2;
   }
 
@@ -1183,6 +1542,7 @@
         y: valores.slice(lim_inf,lim_sup),
         text: textos.slice(lim_inf,lim_sup),
         textposition: 'outside',
+        cliponaxis: false,
         texttemplate: '<b>%{y:.2f}<b>',
         //textangle: -90,
         textfont: { size: 18, family: 'Noto Sans' },
@@ -1193,10 +1553,7 @@
           //bordercolor: '#000000',
           font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
         },
-        showlegend: false,
-        marker: {
-          color: colores.slice(lim_inf,lim_sup) 
-        }
+        showlegend: false
       },
       {
         type: "scatter",
@@ -1221,27 +1578,277 @@
       }
     ], {
       title: {
-        text: `<b><span style="font-size:18px; margin:25px;">${nombre_formateado}</span><br>${indicador_deseado} - ${unidad_deseada}</b><br>`,
-        font: { size: 20, color: "black" },
+        text: `<b><span style="font-size:14px;">${nombre_formateado}</span><br>${indicador_deseado} - ${unidad_deseada}</b><br>`,
+        font: { size: 12, color: "black" },
         x: 0.5
       },
+      margin: { b: 100, t:60, l:40, r:5 }, 
       //xaxis: { title: "Fechas" },
       yaxis: { title: "Valor" },     
-      margin: { b: 100, t:120 }, 
       plot_bgcolor: 'rgba(0,0,0,0)',
       paper_bgcolor: 'rgba(0,0,0,0)',
       uniformtext: {
-        mode: 'hide', // Oculta etiquetas que no caben
-        minsize: 14   // Tamaño mínimo de fuente
+        //mode: 'show', // Oculta etiquetas que no caben
+        minsize: 12   // Tamaño mínimo de fuente
       },
       xaxis: {
-        /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+        tickangle: -45, // Puedes probar con -90 si lo quieres vertical
         tickfont: {
           size: 14,
           weight: 'bold'
         }
       }
     });
+  }
+
+  function actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada) {
+    const datosFiltrados5__ = filtrarUnidadIndicador(datos, unidad_deseada, indicador_deseado);
+    const datosFiltrados5 = filtrarUnidadFecha(datosFiltrados5__, unidad_deseada, fecha_deseada);
+    //console.log(datosFiltrados5);
+    
+    const datosFiltrados5_ = filtrarNumDen(datos_numden, indicador_deseado);
+    //console.log(datosFiltrados5_);
+    let rango1 = 0;
+    let rango2 = 0;
+    const rangoEsperado = datosFiltrados5[0]['esperado_'];
+    // Valores
+    const punto_num = datosFiltrados5[0]['numerador'];
+    const punto_den = datosFiltrados5[0]['denominador'];
+    const den_fijo = datosFiltrados5_[0]['den_fijo'];
+    const f = datosFiltrados5_[0]['factor'];
+    if (datosFiltrados5[0]['esperado'].length > 0){
+      rango1 = datosFiltrados5[0]['esperado'][0];
+      rango2 = datosFiltrados5[0]['esperado'][1];
+    } else{
+      if (rangoEsperado.includes('>')){
+        rango1 = datosFiltrados5[0]['esperado'];
+      } else{
+        rango2 = datosFiltrados5[0]['esperado'];
+      }
+    }
+    /*const rango1 = datosFiltrados5[0]['esperado'].length > 0 ? datosFiltrados5[0]['esperado'][0] : datosFiltrados5[0]['esperado'];
+    const rango2 = datosFiltrados5[0]['esperado'].length > 0 ? datosFiltrados5[0]['esperado'][1] : 0;*/
+    const punto_res = punto_num / punto_den * f;
+    const nombre_num = datosFiltrados5_[0]['nombre_num'];
+    const nombre_den = datosFiltrados5_[0]['nombre_den'];
+    //console.log(punto_num, punto_den, den_fijo, f, rango1, rango2, nombre_num, nombre_den);
+
+    // Status
+    if (rango1 != 0 && rango2 == 0){status_num = 'mayorA';}
+      else if (rango1 == 0 && rango2 != 0){status_num = 'menorA';}
+        else if (rango1 != 0 && rango2 != 0){status_num = 'ambos';};
+
+    if (den_fijo == false){
+      //console.log('Denominador no fijo');
+      if (rango1 != 0 && rango2 == 0){status_den = 'mayorA';}
+        else if (rango1 == 0 && rango2 != 0){status_den = 'menorA';}
+          else if (rango1 != 0 && rango2 != 0){status_den = 'ambos';};
+    };
+    try{
+      console.log('El status del numerador es:', status_num);
+      console.log('El status del denominador es:', status_den);
+    } catch(error){
+      console.log('Denominador es fijo');
+    }
+
+    // Punto minimo
+    let punto_num1 = 0;
+    let punto_num2 = 0;
+    let punto_den1 = 0;
+    let punto_den2 = 0;
+    if (status_num == 'mayorA')
+      punto_num1 = rango1 * punto_den / f;
+    else if (status_num == 'menorA')
+      punto_num2 = rango2 * punto_den / f;
+    else if (status_num == 'ambos'){
+      punto_num1 = rango1 * punto_den / f;
+      punto_num2 = rango2 * punto_den / f;
+    };
+    if (den_fijo == false){
+      if (status_den == 'mayorA')
+        punto_den1 = f * punto_num / rango1;
+      else if (status_den == 'menorA')
+        punto_den2 = f * punto_num / rango2;
+      else if (status_den == 'ambos'){
+        punto_den1 = f * punto_num / rango1;
+        punto_den2 = f * punto_num / rango2;
+      }
+    };
+    //console.log('Puntos:', punto_num1,punto_num2,punto_den1,punto_den2);
+
+    // Rango de valores
+    const max_den = Math.max(punto_den, punto_den1, punto_den2);
+    const max_num = Math.max(punto_num, punto_num1, punto_num2);
+    //console.log('El punto maximo de numerador:', max_num, 'denominador:', max_den);
+    
+    // Rango de X y Y
+    const x = []; // den
+    const y = []; // num
+    const steps = 140;
+    for (let i = max_den*0.25; i <= max_den*1.5; i += max_den*1.5/steps) x.push(i);
+    for (let j = max_num*0.25; j <= max_num*1.5; j += max_num*1.5/steps) y.push(j);
+
+    console.log('el rango de valores de den es:', max_den*0.25 ,'-', max_den*1.5, 'el rango de valores de num es: ', max_num*0.25 ,' -', max_num*1.5);
+
+    // Condición
+    let condicion_num = null;
+    let condicion_den = null;
+    let texto = '';
+    let z = [];
+    let res = 0;
+    let res_format = '';
+    let res2 = 0;
+    let res_format2 = '';
+
+    if (status_num == 'mayorA'){
+      res = rango1 / f * punto_den;
+      res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+      texto += `Num > ${res_format}`;
+      //console.log(`La condicion es: ${texto}`);
+      z = y.map(yVal => x.map(xVal => (yVal >= res && xVal >= punto_den ? 1 : null)));
+    } else if (status_num == 'menorA'){
+      res = rango2 / f * punto_den;
+      res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+      texto += `Num < ${res_format}`;
+      //console.log(`La condicion es: ${texto}`);
+      z = y.map(yVal => x.map(xVal => (yVal <= res && xVal >= punto_den ? 1 : null)));
+    } else if (status_num == 'ambos'){
+      res = rango1 / f * punto_den;
+      res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+      res2 = rango2 / f * punto_den;
+      res_format2 = res2.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+      texto += `${res_format} < Num < ${res_format2}`;
+      //console.log(`Las condiciones son: ${texto}`);
+      z = y.map(yVal => x.map(xVal => (yVal >= res && yVal <= res2 && xVal >= punto_den ? 1 : null)));
+    }
+
+    if (den_fijo == true){
+      let punto_den_format = punto_den.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+      texto += `\nDen = ${punto_den_format}`;
+    };
+
+    if (den_fijo == false){
+      //console.log('Denominador no fijo');
+      if (status_den == 'mayorA'){
+        res = rango1 / f;
+        res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+        texto += `Num > ${res_format} * Den`;
+        //console.log(`La condicion es: ${texto}`);
+        z = y.map(yVal => x.map(xVal => (yVal >= (res * xVal) ? 1 : null)));
+      } else if (status_den == 'menorA'){
+        res = rango2 / f;
+        res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+        texto += `Num < ${res_format} * Den`;
+        //console.log(`La condicion es: ${texto}`);
+        z = y.map(yVal => x.map(xVal => (yVal <= (res * xVal) ? 1 : null)));
+      } else if (status_den == 'ambos'){
+        res = rango1 / f;
+        res_format = res.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+        res2 = rango2 / f;
+        res_format2 = res2.toLocaleString('es-mx', {minimumFractionDigits:2, maximumFractionDigits: 2});
+        texto += `${res_format} * Den < Num < ${res_format2} * Den`;
+        //console.log(`Las condiciones son: ${texto}`);
+        z = y.map(yVal => x.map(xVal => (yVal >= (res * xVal) && yVal <= (res2 * xVal) ? 1 : null)));
+      }
+    };
+
+    console.log(`La condicion es ${texto}`);  
+    //console.log(x.length, y.length)
+
+    // Matriz Z basada en condición: y >= 350
+    // const z = y.map(yVal => x.map(() => (yVal >= 350 ? 1 : null)));
+    const textos2 = y.map((valor, i) => {
+      valy = valor.toLocaleString('es-mx', {maximumFractionDigits: 2});
+      valx = x[i].toLocaleString('es-mx', {maximumFractionDigits: 2});
+      return `${valx} , ${valy}`;
+      });
+    //console.log(textos2);
+
+    Plotly.react("numden",
+      [{
+        x: x,
+        y: y,
+        z: z,
+        type: 'contour',
+        contours: {
+          coloring: 'heatmap',
+          showlabels: false
+        },
+        colorscale: [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,200,200,0.3)']],
+        showscale: false,
+        //hoverinfo: 'skip',
+        name: texto,
+        text: textos2,
+        textposition: 'outside',
+        hovertemplate: 'Num: %{y:,.2f}<br>Den: %{x:,.2f}<extra></extra>'
+      }],
+      {
+        legend: {
+          x: 0,
+          y: 1,
+          xanchor: 'left',
+          yanchor: 'top'
+        },
+        title: `<b>Numerador/Denominador ${indicador_deseado} - <br>${unidad_deseada}, ${fecha_deseada}</b>`,
+        xaxis: { title: `den: ${nombre_den}` },
+        yaxis: { title: `num: ${nombre_num}` },
+        margin: {r: 10}
+      }
+    ); // numden
+    let y2 = [];
+    let color = 'red';
+    let name = '';
+    if (den_fijo == true){
+      console.log('Al graficar el denominador es constante');      
+      if (rango1 != 0){
+        //const y1 = x.map(d => rango1 / f * punto_den);
+        y2 = Array(steps).fill(rango1/f*punto_den);
+        name = `Num > ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`;
+        addLine('numden', x, y2, color, name);
+      }
+      if (rango2 != 0){
+        y2 = Array(steps).fill(rango2/f*punto_den);
+        name = `Num < ${punto_num2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`;
+        addLine('numden', x, y2, color, name);
+      }
+    } else{
+      console.log('Al graficar el denominador NO es constante')
+      if (rango1 != 0){
+        y2 = x.map(d => rango1 / f * d);
+        name = `Num > ${(rango1/f).toLocaleString('es-mx', {maximumFractionDigits: 2})} * Den`;
+        addLine('numden', x, y2, color, name);
+      }
+      if (rango2 != 0){
+        y2 = x.map(d => rango2 / f * d);
+        name = `Num < ${(rango2/f).toLocaleString('es-mx', {maximumFractionDigits: 2})} * Den`;
+        addLine('numden', x, y2, color, name);
+      }
+    }
+
+    // Linea constante poblacion
+    if (den_fijo == true){
+      console.log('Se grafica el denominador constante y el punto de cambio.');
+      x2 = Array(steps).fill(punto_den);
+      name = `Denominador = ${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})}`;
+      addLine('numden', x2, y, 'green', name);
+      if (punto_num1 != 0)
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'orange', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+      if (punto_num2 != 0)
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num2, f, 'blue', `Num = ${punto_num2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+    }
+    if (den_fijo == false){
+      if (punto_num1 != 0)
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'orange', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+      if (punto_num2 != 0)
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num2, f, 'blue', `Num = ${punto_num2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+      if (punto_den1 != 0)
+        addPoint('numden', punto_den, punto_den1, punto_num, punto_num, f, 'brown', `Den = ${punto_den1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+      if (punto_den2 != 0)
+        addPoint('numden', punto_den, punto_den2, punto_num, punto_num, f, 'purple', `Den = ${punto_den2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+    }
+
+    // punto actual
+    addActualPoint('numden', punto_den, punto_num, 'red', f, res);
   }
 
   function actualizarRankingPN(datos_pond, fecha_deseada){
@@ -1326,9 +1933,9 @@
             font: { size: 24, color: "black" },
             x: 0.5
           },
-          width: 800,
+          width: document.getElementById('ranking_1N').clientWidth*0.95,
           height: 500,
-          autosize: true,
+          autosize: false,
           /*xaxis: { title: "Valor" },*/
           plot_bgcolor: 'rgba(0,0,0,0)',
           paper_bgcolor: 'rgba(0,0,0,0)',
@@ -1340,7 +1947,7 @@
             blur: 10
           },
           showlegend: false,
-          margin: { b: 200, l:20, r:10 },
+          margin: { b: 200, l:20, r:10, t:60 },
           uniformtext: {
             minsize: 10   // Tamaño mínimo de fuente
           },
@@ -1444,7 +2051,7 @@
           x: 0.5
         },
         autosize: true,
-        width: 800,
+        width: document.getElementById('ranking_2N').clientWidth*0.95,
         height: 500,
         yaxis: { title: "Valor" },
         plot_bgcolor: 'rgba(0,0,0,0)',
@@ -1468,7 +2075,7 @@
           }
         }
       }
-    ); // ranking_1N
+    ); // ranking_2N
   }
 
   function actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada){
@@ -1570,9 +2177,9 @@
       ], 
       {
         height: 500,
-        width: 385,
+        width: document.getElementById('ranking2').clientWidth*0.95,
         autosize: true,
-        margin: {b: 20},
+        margin: {b: 20, l: 60, t:40, r:30},
         title: {
           text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
           font: { size: 20, color: "black" },
@@ -1621,6 +2228,8 @@
     //console.log(datos_pond_fecha);
     ponderaciones = analisisRanking(datos_pond_fecha, 'Segundo Nivel');
     //console.log(ponderaciones);
+    
+    document.getElementById('ranking2-2').style.maxWidth = '30%';
 
     const pond_unidad = Object.fromEntries(Object.entries(ponderaciones).filter(([unidad]) => unidad === unidad_deseada));
     //console.log(pond_unidad);
@@ -1704,8 +2313,8 @@
       ], 
       {
         height: 500,
-        width: 385,
-        margin: {b: 20},
+        width: document.getElementById('ranking2-2').clientWidth*0.95,
+        margin: {b: 20, l: 60, t:40, r:30},
         autosize: true,
         title: {
           text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
@@ -1734,7 +2343,7 @@
           }
         }
       }
-    ); // ranking2
+    ); // ranking2-2
   }
 
   function actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada){
@@ -1759,6 +2368,8 @@
       console.log('No hay nada')
       return;
     }
+
+    document.getElementById('ranking2-2').style.maxWidth = '100%';
 
     const x_labels = grupo_indicadores.map(([nombre]) => nombre);
     const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
@@ -1796,7 +2407,7 @@
             bgcolor: color_deseado,
             font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
           },*/
-          margin: { b: 150 },
+          margin: {b: 20, l: 60, t:40, r:30},
           showlegend: false,
           name: 'Pond. Estimada',
           hoverinfo: 'none'
@@ -1827,6 +2438,7 @@
       {
         height: 400,
         width: 1246,
+        margin: {b: 20, l: 60, t:40, r:30},
         autosize: true,
         title: {
           text: `Ponderación obtenida vs estimada - ${unidad_deseada}, ${fecha_deseada}`,
@@ -1896,7 +2508,7 @@
   // ---------- RANKING ------------------ //
   nivel_deseado = 'Primer Nivel';
   procesos = ['DM', 'EH', 'CAMama', 'CACU', 'Materna', 'Neonatal', 'S.Ob'];
-  normativos = ['CUPN', 'CUSN', 'CVE', 'CES','CTE', 'IAAS', 'CIS'];
+  normativos = ['CUPN', 'CUSN', 'IAAS', 'CVE', 'CES','CTE', 'CIS'];
 
   // ---------- HEADER HIDE/UNHIDE ----------- //
   const fechas_1 = document.getElementById('calendario');
@@ -1918,10 +2530,114 @@
     }
   });
 
+  function loadFirebaseData() {
+    // Create references to your Firebase paths
+    const resultadosRef = firebase.database().ref('data');
+    const ponderacionesRef = firebase.database().ref('rank');
+    const numdenRef = firebase.database().ref('numden');
 
-  fetch("https://script.google.com/macros/s/AKfycbz0f3Y7rHNwbWDwcgPWYdbQ-C-aACwyU4_4WliqSStqKaMidZXzMDKcxCWaGKNx4SuHMg/exec") //"https://script.google.com/macros/s/AKfycbxbdwnq17ukuBOPxtHR52a12NcrR4V5LiTujKCPFWMKoYztEFmIBk6pyeyHG2UwVMamog/exec")
+    // Fetch all data simultaneously
+    Promise.all([
+      resultadosRef.once('value'),
+      ponderacionesRef.once('value'),
+      numdenRef.once('value')
+    ])
+    .then(([resultadosSnapshot, ponderacionesSnapshot, numdenSnapshot]) => {
+      // Process resultados data (previously data_1)
+      const data_1 = resultadosSnapshot.val();
+      datos = Object.values(data_1).map(row => ({
+        fecha: formatearFecha(row['FECHA']),
+        unidad: row["UNIDAD"],
+        ind: row["IND"],
+        indicador: row["INDICADOR"],
+        nombre_indicador: row["NOMBRE INDICADOR"],
+        valor: parseFloat(row["VALOR"]),
+        color: calcularColor(row["VALOR"], row["ESPERADO"], row["MEDIO"], row["BAJO"]),
+        esperado: obtenerRangoNumero(row['ESPERADO']),
+        medio: obtenerRangoNumero(row['MEDIO']),
+        bajo: obtenerRangoNumero(row['BAJO']),
+        esperado_: row['ESPERADO'],
+        medio_: row['MEDIO'],
+        bajo_: row['BAJO'],
+        numerador: row['NUM'],
+        denominador: row['DEN']
+      }));
+
+      // Process ponderaciones data (previously data_2)
+      const data_2 = ponderacionesSnapshot.val();
+      datos_pond = Object.values(data_2).map(row => ({
+        fecha: formatearFecha(row['FECHA']),
+        indicador: row['INDICADOR'],
+        unidad: row['UNIDAD MEDICA'],
+        ind: row['IND'],
+        pond_est: row['POND_ ESTIMADA'],
+        pond_obt: row['POND_ OBTENIDA'],
+        nivel: row['NIVEL']
+      }));
+
+      // Process numden data (previously data_3)
+      const data_3 = numdenSnapshot.val();
+      datos_numden = Object.values(data_3).map(row => ({
+        indicador: row['Indicador'],
+        nombre_indicador: row['Nombre'],
+        nombre_num: row['Num'],
+        nombre_den: row['Den'],
+        factor: row['Factor'],
+        den_fijo: row['den_fijo'] == 1 ? true : false
+      }));
+
+      // Call any functions that depend on this data
+      //initializeAfterDataLoad();
+      console.log(datos, datos_pond, datos_numden, typeof datos);
+      console.log("Termina de preparar los datos. Comienza a graficar.");
+      datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
+      indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
+      actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+      actualizarRankingPN(datos_pond, fecha_deseada);
+      actualizarRankingSN(datos_pond, fecha_deseada);
+      //actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+      document.getElementById('ranking_1N').hidden = true;
+      document.getElementById('ranking_2N').hidden = true;
+      document.getElementById('ranking2').hidden = true;
+      document.getElementById('ranking2-2').hidden = true;
+      // Set Oaxaca as selected
+      document.querySelectorAll("button").forEach(b => {
+        if (b.textContent == 'Oaxaca'){
+          b.classList.add('activo');
+        }
+      }); // remover estilo activo a todos.
+      document.getElementById('loader-overlay').style.display = 'none';
+      // Inicializar calendario
+      console.log(fechas);
+      updateYearDisplay();
+      updateSelectedMonth();
+      selector.value = unidad_deseada;
+      if (fecha_deseada == fechas[fechas.length - 1]){
+        document.getElementById('prev-month').disabled = false;
+        document.getElementById('next-month').disabled = true;
+      } else if (fecha_deseada == fechas[0]){      
+        document.getElementById('prev-month').disabled = true;
+        document.getElementById('next-month').disabled = false;
+      } else{
+        document.getElementById('prev-month').disabled = false;
+        document.getElementById('next-month').disabled = false;
+      }
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+    })
+    .catch(error => {
+      console.error("Error loading Firebase data:", error);
+      // Add error handling UI here
+    });
+  }
+
+  // Call this instead of your original fetch
+  window.addEventListener('DOMContentLoaded', loadFirebaseData);
+
+  /*fetch("https://script.google.com/macros/s/AKfycbzjBjlZ0rtjIVj7dI009Hk0Meo6x_YyafirEKfjGC11jlwKTFIoThzHuw3lu_Zdwl-zKA/exec") //"https://script.google.com/macros/s/AKfycbxbdwnq17ukuBOPxtHR52a12NcrR4V5LiTujKCPFWMKoYztEFmIBk6pyeyHG2UwVMamog/exec")
     .then(response => response.json())
     .then(data => {
+      console.log(typeof data);
       data_1 = data.resultados;
       datos = data_1.map(row => ({
         fecha: formatearFecha(row['FECHA']),
@@ -1936,7 +2652,9 @@
         bajo: obtenerRangoNumero(row['BAJO']),
         esperado_: row['ESPERADO'],
         medio_: row['MEDIO'],
-        bajo_: row['BAJO']
+        bajo_: row['BAJO'],
+        numerador: row['NUM'],
+        denominador: row['DEN']
       }));
       data_2 = data.ponderaciones;
       datos_pond = data_2.map(row => ({
@@ -1948,7 +2666,16 @@
         pond_obt: row['POND. OBTENIDA'],
         nivel: row['NIVEL']
       }));
-    // console.log(datos, datos_pond);
+      data_3 = data.numden;
+      datos_numden = data_3.map(row => ({
+        indicador: row['Indicador'],
+        nombre_indicador: row['Nombre'],
+        nombre_num: row['Num'],
+        nombre_den: row['Den'],
+        factor: row['Factor'],
+        den_fijo: row['den_fijo'] == 1 ? true : false
+      }));
+    console.log(datos, datos_pond, datos_numden, typeof datos);
     console.log("Termina de preparar los datos. Comienza a graficar.");
     datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
     indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
@@ -1983,7 +2710,8 @@
       document.getElementById('prev-month').disabled = false;
       document.getElementById('next-month').disabled = false;
     }
-  });
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+  });*/
 
   Plotly.newPlot("ranking_1N",
     [{
@@ -2341,6 +3069,31 @@
     }
   ); // indicadores_2
 
+  Plotly.react("numden",
+      [{
+        x: [0,1,2,3,4,5],
+        y: [0,1,2,3,4,5],
+        z: [null, 1, null, 1, null, 1],
+        type: 'contour',
+        contours: {
+          coloring: 'heatmap',
+          showlabels: false
+        },
+        colorscale: [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,200,200,0.3)']],
+        showscale: false,
+        //hoverinfo: 'skip',
+        name: '',
+        text: '',
+        textposition: 'outside',
+        hovertemplate: 'Num: %{y:,.2f}<br>Den: %{x:,.2f}<extra></extra>'
+      }],
+      {
+        title: 'Valores esperados Num / Den - Oaxaca, mes año',
+        xaxis: { title: 'den' },
+        yaxis: { title: 'num' }
+      }
+    ); // numden
+
   let currentYear = new Date().getFullYear();
   let selectedMonth = ((new Date().getMonth() - 1) <= 0) ? 1:new Date().getMonth() - 1;
   mes_deseado = meses[selectedMonth-1];
@@ -2382,6 +3135,7 @@
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
       
       // Checar las disponibilidad del boton en header
       console.log(fecha_deseada, fechas);
@@ -2469,7 +3223,8 @@
     actualizarRankingSN(datos_pond, fecha_deseada);
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
-    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);    
+    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);  
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);  
   });
 
   document.getElementById('next-month').addEventListener('click', () => {
@@ -2498,6 +3253,7 @@
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada); 
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
 
   console.log('Terminó una gráfica, empezando a comunicarse.');
@@ -2528,6 +3284,7 @@
       if (unidad_completa == 'HGSMF 41 Huatulco' || unidad_completa == 'HGZMF 02 Salina Cruz'){
         document.getElementById('ranking_2N').hidden = false;
         document.getElementById('ranking2-2').hidden = false;
+        document.getElementById('ranking2-2').style.max_width = '30%';
         document.getElementById('rank_unidad_2').hidden = false;
       } else{
         document.getElementById('ranking_2N').hidden = true;
@@ -2549,6 +3306,7 @@
       actualizarRankingSN(datos_pond, fecha_deseada);
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
     });    
     contenedor1.appendChild(btn);
   });
@@ -2604,6 +3362,7 @@
         console.log('Entramos a delegacional')
         actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
       }
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
     });    
     contenedor2.appendChild(btn);
   });
@@ -2620,6 +3379,7 @@
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
     updateActiveButton(unidad_deseada);
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
 
   // Limpiar opciones existentes (si las hay)
@@ -2648,6 +3408,7 @@
     datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
     indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
     actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
 
   document.getElementById("indicadores_1").on('plotly_click', function(data4) {
@@ -2656,6 +3417,7 @@
     // console.log('click en:',punto);
     // Actualizando Graficas
     actualizarGrafica4(datos, unidad_deseada, indicador_deseado, desempeño);
+    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
 
   document.getElementById('ranking_1N').on('plotly_click', function(data5) {
@@ -2672,6 +3434,7 @@
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
       updateActiveButton(unidad_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
     }
   });
 
@@ -2688,6 +3451,7 @@
       actualizarRankingSN(datos_pond, fecha_deseada);
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
       updateActiveButton(unidad_deseada);
     }
   });
