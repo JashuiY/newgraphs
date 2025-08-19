@@ -5,7 +5,8 @@
   <script src="all.js"></script>
   <title>INDICADORES</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
+  <script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
   <!-- Your Firebase config -->
@@ -1800,8 +1801,8 @@
           text: `<b>Valor actual. <br>Numerador/Denominador ${indicador_deseado} - <br>${unidad_deseada}, ${fecha_deseada}</b>`,
           font: { size: 12, color: "black" }
         },
-        xaxis: { title: `Den: ${format_den}` },
-        yaxis: { title: `Num: ${format_num}` },
+        xaxis: { title: { text: `Den: ${format_den}` } },
+        yaxis: { title: { text: `Num: ${format_num}` } },
         margin: {r: 10}
       }
     ); // numden
@@ -3469,6 +3470,7 @@
   </script>
 </body>
 </html>
+
 
 
 
