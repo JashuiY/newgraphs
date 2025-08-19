@@ -1380,6 +1380,7 @@
 
     //console.log(fecha_deseada ,datos_mes_act, fecha_ant, datos_mes_ant);
     const a = rank_mes_act.inds;
+    //console.log(rank_mes_act['pond_aju'], rank_mes_ant['pond_aju'])
 
     const cuerpoTabla_2 = document.getElementById('cuerpo_indi');
     cuerpoTabla_2.innerHTML = '';
@@ -1412,6 +1413,26 @@
       `;//*/
         cuerpoTabla_2.appendChild(fila);
     });
+    // Total
+    let pond_comp_ = rank_mes_act['pond_aju'] - rank_mes_ant['pond_aju'];
+    if (pond_comp_ == 0){ 
+      pond_comp_ = `—${pond_comp_.toFixed(2)}`; 
+      color_text_ = 'black';
+    } else if (pond_comp_ > 0){ 
+      pond_comp_ = `▲${pond_comp_.toFixed(2)}`; 
+      color_text_ = "green";
+    } else if (pond_comp_ < 0){ 
+      pond_comp_ = `▼${Math.abs(pond_comp_).toFixed(2)}`; 
+      color_text_ = 'red';
+    }
+    const fila_ = document.createElement("tr");
+    fila_.innerHTML = `
+      <td style="padding: 4px; border: 1px solid #ccc; font-size: 24px;"><b>Total</b></td>
+      <td style="padding: 4px; border: 1px solid #ccc; text-align: center; font-size: 24px;">${rank_mes_ant['pond_aju'].toFixed(2)}</td>
+      <td style="padding: 4px; border: 1px solid #ccc; text-align: center; font-size: 24px;">${rank_mes_act['pond_aju'].toFixed(2)}</td>
+      <td style="padding: 4px; border: 1px solid #ccc; text-align: center; font-size: 24px; color: ${color_text_}"><b>${pond_comp_}</b></td>
+    `;
+    cuerpoTabla_2.appendChild(fila_);
 
     // ------------------- HEADERS DE LAS TABLAS ------------------------
     const header_1 = document.getElementById('fecha_actual_header');
@@ -3484,4 +3505,5 @@
   </script>
 </body>
 </html>
+
 
