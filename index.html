@@ -1807,7 +1807,7 @@
       }
     ); // numden
     let y2 = [];
-    let color = 'red';
+    let color = 'green';
     let name = '';
     if (den_fijo == true){
       console.log('Al graficar el denominador es constante');      
@@ -1841,25 +1841,25 @@
       console.log('Se grafica el denominador constante y el punto de cambio.');
       x2 = Array(steps).fill(punto_den);
       name = `Denominador = ${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})}`;
-      addLine('numden', x2, y, 'green', name);
+      addLine('numden', x2, y, 'navy', name);
       if (punto_num1 != 0)
-        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'orange', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'cyan', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
       if (punto_num2 != 0)
         addPoint('numden', punto_den, punto_den, punto_num, punto_num2, f, 'blue', `Num = ${punto_num2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
     }
     if (den_fijo == false){
       if (punto_num1 != 0)
-        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'orange', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+        addPoint('numden', punto_den, punto_den, punto_num, punto_num1, f, 'cyan', `Num = ${punto_num1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
       if (punto_num2 != 0)
         addPoint('numden', punto_den, punto_den, punto_num, punto_num2, f, 'blue', `Num = ${punto_num2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
       if (punto_den1 != 0)
-        addPoint('numden', punto_den, punto_den1, punto_num, punto_num, f, 'brown', `Den = ${punto_den1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+        addPoint('numden', punto_den, punto_den1, punto_num, punto_num, f, 'saddlebrown', `Den = ${punto_den1.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
       if (punto_den2 != 0)
-        addPoint('numden', punto_den, punto_den2, punto_num, punto_num, f, 'purple', `Den = ${punto_den2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
+        addPoint('numden', punto_den, punto_den2, punto_num, punto_num, f, 'magenta', `Den = ${punto_den2.toLocaleString('es-mx', {maximumFractionDigits: 2})}`);
     }
 
     // punto actual
-    addActualPoint('numden', punto_den, punto_num, 'red', f, res);
+    addActualPoint('numden', punto_den, punto_num, color_deseado, f, res);
   }
 
   function actualizarRankingPN(datos_pond, fecha_deseada){
@@ -2634,7 +2634,7 @@
         document.getElementById('prev-month').disabled = false;
         document.getElementById('next-month').disabled = false;
       }
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
     })
     .catch(error => {
       console.error("Error loading Firebase data:", error);
@@ -3080,7 +3080,7 @@
     }
   ); // indicadores_2
 
-  Plotly.react("numden",
+  Plotly.newPlot("numden",
       [{
         x: [0,1,2,3,4,5],
         y: [0,1,2,3,4,5],
@@ -3146,7 +3146,7 @@
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
       
       // Checar las disponibilidad del boton en header
       console.log(fecha_deseada, fechas);
@@ -3235,7 +3235,7 @@
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);  
-    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);  
+    actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);  
   });
 
   document.getElementById('next-month').addEventListener('click', () => {
@@ -3264,7 +3264,7 @@
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada); 
-    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+    actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
   });
 
   console.log('Terminó una gráfica, empezando a comunicarse.');
@@ -3317,7 +3317,7 @@
       actualizarRankingSN(datos_pond, fecha_deseada);
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
     });    
     contenedor1.appendChild(btn);
   });
@@ -3373,7 +3373,7 @@
         console.log('Entramos a delegacional')
         actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
       }
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
     });    
     contenedor2.appendChild(btn);
   });
@@ -3390,7 +3390,7 @@
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
     updateActiveButton(unidad_deseada);
-    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+    actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
   });
 
   // Limpiar opciones existentes (si las hay)
@@ -3419,7 +3419,7 @@
     datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
     indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
     actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
-    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+    actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
   });
 
   document.getElementById("indicadores_1").on('plotly_click', function(data4) {
@@ -3445,7 +3445,7 @@
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
       updateActiveButton(unidad_deseada);
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
     }
   });
 
@@ -3462,7 +3462,7 @@
       actualizarRankingSN(datos_pond, fecha_deseada);
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
-      actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
+      actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
       updateActiveButton(unidad_deseada);
     }
   });
