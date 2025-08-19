@@ -691,7 +691,8 @@
       y: y2,
       mode: 'lines',
       line: {color: color_line},
-      name: name_line,
+      /*name: name_line,*/
+      showlegend: false,
       hoverinfo: 'skip',
     });
   }
@@ -723,7 +724,8 @@
         color: color_line,
         line: {color: 'black', width: 0.75}
       },
-      name: name_line,
+      /*name: name_line,*/
+      showlegend: false,
       text: `${y_} ; ${x_} --> <b>${punto_res}</b>`,
       hoverinfo: 'text'
     });
@@ -743,11 +745,11 @@
         size: 10
       },
       /*text: [`${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})} / ${punto_num.toLocaleString('es-mx', {maximumFractionDigits: 2})} * ${f} = ${res}`],*/
-      text: `${punto_num_} ; ${punto_den_} --> <b>${punto_res}</b>`,
+      text: `${punto_num_} ; ${punto_den_} → <b>${punto_res}</b>`,
       hoverinfo: 'text',
       /*hovertemplate: '',*/
       textposition: 'top left',
-      name: 'Punto actual',
+      name: `Punto actual: ${punto_res}`,
       //hoverinfo: 'skip',
     });
   }
@@ -1610,7 +1612,8 @@
   function actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada) {
     const datosFiltrados5__ = filtrarUnidadIndicador(datos, unidad_deseada, indicador_deseado);
     const datosFiltrados5 = filtrarUnidadFecha(datosFiltrados5__, unidad_deseada, fecha_deseada);
-    //console.log(datosFiltrados5);
+    console.log(datosFiltrados5);
+    console.log('-------- Aquiiii entro -------')
     
     const datosFiltrados5_ = filtrarNumDen(datos_numden, indicador_deseado);
     //console.log(datosFiltrados5_);
@@ -3481,9 +3484,4 @@
   </script>
 </body>
 </html>
-
-
-
-
-
 
