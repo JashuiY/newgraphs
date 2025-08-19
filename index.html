@@ -1803,7 +1803,16 @@
         },
         xaxis: { title: { text: `Den: ${format_den}` } },
         yaxis: { title: { text: `Num: ${format_num}` } },
-        margin: {r: 10}
+        margin: {r: 10},
+        annotations: [{
+          xref: 'paper',
+          yref: 'paper',
+          x: 0.01,
+          y: 0.75,
+          text: `<b>RANGOS:<br><span style="color: green">Esperado:</span> ${rangoEsperado}<br><span style="color: orange">Medio:</span> ${rangoMedio}<br><span style="color: red">Bajo:</span> ${rangoBajo}</b>`,
+          showarrow: false,
+          align: 'center'
+        }]
       }
     ); // numden
     let y2 = [];
@@ -3470,6 +3479,7 @@
   </script>
 </body>
 </html>
+
 
 
 
