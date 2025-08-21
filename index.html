@@ -1581,7 +1581,7 @@
         cliponaxis: false,
         texttemplate: '<b>%{y:.2f}<b>',
         textangle: -45,
-        textfont: { size: 15, family: 'Noto Sans' },
+        textfont: { size: 12, family: 'Noto Sans' },
         marker: { color: colores.slice(lim_inf,lim_sup) },
         hovertemplate: '%{text}<extra></extra>',
         showlegend: false
@@ -1618,7 +1618,7 @@
         x: 0.5,
         y: 0.95 
       },
-      margin: { b: 110, t:80, l:10, r:5 },   
+      margin: { b: 110, t:80, l:15, r:5 },   
       plot_bgcolor: 'rgba(0,0,0,0)',
       paper_bgcolor: 'rgba(0,0,0,0)',
       uniformtext: {
@@ -2170,7 +2170,7 @@
           y: 3,
           blur: 10
         },
-        /*margin: { t: 150 },/**/
+        margin: { t: 150, l: 20, r: 20, b: 20 },
         uniformtext: {
           minsize: 14   // Tamaño mínimo de fuente
         },
@@ -3499,6 +3499,7 @@
   </script>
 </body>
 </html>
+
 
 
 
