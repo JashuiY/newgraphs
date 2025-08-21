@@ -1635,9 +1635,9 @@
       },
       xaxis: {
         unifiedhovertitle: { text: '<b>%{x}</b>' },
-        tickangle: -45, // Puedes probar con -90 si lo quieres vertical
+        tickangle: -90, // Puedes probar con -90 si lo quieres vertical
         tickfont: {
-          size: 14,
+          size: 13,
           weight: 'bold',
           family: 'Noto Sans'
         }
@@ -2125,7 +2125,7 @@
           texttemplate: '<b>%{y:.2f}</b>',
           textfont: {size: 20},
           marker: { color: colores_ranking },
-          hovertemplate: '<b>%{text}</b><br>%{y:.4f}<extra></extra>',
+          hovertemplate: '<b>%{text}</b><br>%{y:.2f}<extra></extra>',
           hoverlabel: {
             bgcolor: colores_ranking,
             font: { family: 'Noto Sans', size: 18}
@@ -2170,7 +2170,7 @@
           y: 3,
           blur: 10
         },
-        margin: { t: 150, l: 20, r: 20, b: 20 },
+        margin: { t: 150, l: 20, r: 20 },
         uniformtext: {
           minsize: 14   // Tamaño mínimo de fuente
         },
@@ -2181,7 +2181,7 @@
         xaxis: {
           tickangle: 0, // /*Puedes probar con -90 si lo quieres vertical*/
           tickfont: {
-            size: 14,
+            size: 12,
             weight: 'bold'
           }
         }
@@ -3499,6 +3499,7 @@
   </script>
 </body>
 </html>
+
 
 
 
