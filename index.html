@@ -1540,7 +1540,7 @@
     const nombres_indicadores = datosFiltrados3.map(row => row['nombre_indicador']);
     //console.log(textos);
     const nombre_indicador = nombres_indicadores[0];
-    const nombre_formateado = insertarSaltosLinea(nombre_indicador, 55);
+    const nombre_formateado = insertarSaltosLinea(nombre_indicador, 50);
 
     const indicadores = datosConError.map(row => row['indicadores']);
     const limites = datosConError.map(row => row['limite']);
@@ -1580,15 +1580,10 @@
         textposition: 'outside',
         cliponaxis: false,
         texttemplate: '<b>%{y:.2f}<b>',
-        //textangle: -90,
-        textfont: { size: 18, family: 'Noto Sans' },
+        textangle: -45,
+        textfont: { size: 15, family: 'Noto Sans' },
         marker: { color: colores.slice(lim_inf,lim_sup) },
         hovertemplate: '%{text}<extra></extra>',
-        /*hoverlabel: {
-          bgcolor: colores.slice(lim_inf,lim_sup),
-          //bordercolor: '#000000',
-          font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-        },*/
         showlegend: false
       },
       {
@@ -1855,7 +1850,7 @@
       {
         legend: {
           x: 0,
-          y: 1,
+          y: 0.90,
           xanchor: 'left',
           yanchor: 'top'
         },
@@ -1876,12 +1871,12 @@
         },
         xaxis: { title: { text: `Den: ${format_den}` } },
         yaxis: { title: { text: `Num: ${format_num}` } },
-        margin: {r: 10, b: 40, t: 40},
+        margin: {r: 10, b: 60, t: 50},
         annotations: [{
           xref: 'paper',
           yref: 'paper',
           x: 0.01,
-          y: 0.75,
+          y: 0.25,
           text: `<b>RANGOS:<br><span style="color: green">Esperado:</span> ${rangoEsperado}<br><span style="color: orange">Medio:</span> ${rangoMedio}<br><span style="color: red">Bajo:</span> ${rangoBajo}</b>`,
           showarrow: false,
           align: 'left',
@@ -3504,6 +3499,7 @@
   </script>
 </body>
 </html>
+
 
 
 
