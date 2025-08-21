@@ -5,7 +5,6 @@
   <script src="all.js"></script>
   <title>INDICADORES</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
   <script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -56,25 +55,20 @@
       width: var(--ancho);
       align-items: center;
     }
-    .contenedor_vertical {
+    .contenedor-separator {
       display: flex;
-      gap: 20px; /* Espacio entre gráficos */
-      margin-bottom: 20px;
+      background-color: #006556;
+      height: 60px;
+      align-items: center;
+    }
+    b.separator {
+      font-size: 50px;
+      color: white;
       margin-left: auto;
       margin-right: auto;
-      width: var(--ancho);
-      align-items: center;
+      letter-spacing: 25px;
     }
-    .contenedor_2 {
-      display: flex;
-      gap: 20px; /* Espacio entre gráficos */
-      margin-bottom: 20px;
-      /*margin-left: auto;*/
-      margin-right: auto;
-      width: 50%;
-      align-items: center;
-    }
-    .contenedor_3 {
+    .contenedor_header {
       display: flex;
       gap: 10px; /* Espacio entre gráficos */
       margin-bottom: 2px;
@@ -127,12 +121,12 @@
       max-width: 30%;
       /*width: 30%;*/
     }
-    #ranking2 .hovertext text{ 
-      /*
-      transform-origin: center;*/
+    /*#ranking2 .hovertext text{ 
+      
+      transform-origin: center;
       transform: translate(10px);
       transform: rotate(-60deg); 
-    }
+    }*/
     #indicadores_1, #indicadores_2, #numden {
       /*height: 700px;*/
       background: white;
@@ -141,10 +135,8 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.08);
       font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
       border: 1px solid rgba(0,0,0,0.05);
-      /*overflow: hidden;*/
       margin-left: auto;
       margin-right: auto;
-      /*width: 80%;*/
     }
     #numden{
       /*max-width: 30%;*/
@@ -210,6 +202,11 @@
       height: 80px;
       animation: spin 1s linear infinite;
     }
+    /* Class to show the loader */
+    .show-loader {
+      display: flex;
+    }
+
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
@@ -484,7 +481,7 @@
   </style>
 </head>
 <header>
-  <div class="contenedor_3"> 
+  <div class="contenedor_header"> 
     <div class="selected-display">
       <span id="selected-month" class="selected-month">Septiembre</span>
       <span id="selected-year" class="selected-year">2023</span>
@@ -555,19 +552,6 @@
       <div class="botones" id="botones1"></div>
   </div>
 
-  <div class="contenedor">    
-    <div id="ranking_1N" class="grafica"></div>  
-    <div id="ranking2" class="grafica"></div>
-  </div>
-
-  <!--<div id="div_ranking2" class="contenedor">  
-  </div>-->
-
-  <div class="contenedor">    
-    <div id="ranking_2N" class="grafica"></div>   
-    <div id="ranking2-2" class="grafica"></div>
-  </div>
-
   <!--<div id="div_ranking2-2" class="contenedor"> 
   </div>-->
 
@@ -584,9 +568,28 @@
     <div id="numden" class="grafica"></div>   
   </div>
 
+  <div>
+    <div class="contenedor-separator">
+      <b class="separator">RANKING</b>
+    </div>
+  </div>
+
+  <div class="contenedor">    
+    <div id="ranking_1N" class="grafica"></div>  
+    <div id="ranking2" class="grafica"></div>
+  </div>
+
+  <!--<div id="div_ranking2" class="contenedor">  
+  </div>-->
+
+  <div class="contenedor">    
+    <div id="ranking_2N" class="grafica"></div>   
+    <div id="ranking2-2" class="grafica"></div>
+  </div>
+
   <div id="analisis_1" hidden>
-    <div class="contenedor">
-      <b style="font-family: 'Noto Sans'; font-size: 32px;">Análisis</b>
+    <div class="contenedor-separator">
+      <b class="separator">ANÁLISIS</b>
     </div>
 
     <div class="contenedor">
@@ -669,11 +672,11 @@
         </table>
     </div>
 
-    <div class="contenedor">
+    <!---<div class="contenedor">
       <div class="contenedor_2">
         
       </div>
-      <!--- --->
+       --->
     </div>
   </div>
 
@@ -724,10 +727,9 @@
         color: color_line,
         line: {color: 'black', width: 0.75}
       },
-      /*name: name_line,*/
       showlegend: false,
-      text: `${y_} ; ${x_} --> <b>${punto_res}</b>`,
-      hoverinfo: 'text'
+      text: `Num: ${x_}<br>Den: ${y_}<br>Valor: <b>${punto_res}</b>`,
+      hoverinfo: 'text',
     });
   }
 
@@ -738,19 +740,15 @@
     Plotly.addTraces(id, {
       x: [punto_den],
       y: [punto_num],
-      //mode: 'markers+text',
       type: 'scatter',
       marker: {
         color: color_line,
         size: 10
       },
-      /*text: [`${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})} / ${punto_num.toLocaleString('es-mx', {maximumFractionDigits: 2})} * ${f} = ${res}`],*/
-      text: `${punto_num_} ; ${punto_den_} → <b>${punto_res}</b>`,
+      text: `Num: ${punto_num_}<br>Den: ${punto_den_}<br>Valor: <b>${punto_res}</b>`,
       hoverinfo: 'text',
-      /*hovertemplate: '',*/
       textposition: 'top left',
-      name: `Punto actual: ${punto_res}`,
-      //hoverinfo: 'skip',
+      name: `Punto actual:<br>Num: ${punto_num_}<br>Den: ${punto_den_}<br>Valor: <b>${punto_res}</b>`,
     });
   }
 
@@ -1189,11 +1187,11 @@
           text: `<b>${titulo}</b>`,
           font: {
             size: 24,
-            color: '#103134',//"black"
+            color: 'black',//"black"#103134
             weight: 'bold'
           },
           x: 0.5,
-          //position: "center middle"
+          y: 0.95
         },
         annotations: [{  // Texto en el centro
           text: `<b>No.<br>Indicadores:<br><br><span style="font-size:20px; margin:25px;">${n_indicadores}</span><b>`,
@@ -1216,7 +1214,7 @@
         },
         plot_bgcolor: 'rgba(0,0,0,0)', // Fondo transparente
         paper_bgcolor: 'rgba(0,0,0,0)',
-        margin: { t: 40, b: 40, l: 0, r: 0 }, // Márgenes ajustados
+        margin: { t: 50, b: 40, l: 0, r: 0 }, // Márgenes ajustados
         font: {
           family: 'Noto Sans',
           color: '#333333'
@@ -1281,12 +1279,7 @@
           textangle: -45,
           textfont: { size: 18, family: 'Noto Sans' },
           marker: { color: color_deseado },
-          hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
-          hoverlabel: {
-            bgcolor: color_deseado,
-            //bordercolor: '#000000',
-            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-          },
+          hovertemplate: '%{text}<extra></extra>',
           showlegend: false
         },
         // Línea de pasos (valores esperados)
@@ -1295,8 +1288,6 @@
           mode: "lines+markers",
           x: indicadores,
           y: limites,
-          //name: "Limite Rango",
-          //hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
           line: {
             shape: "hvh",  // step graph: horizontal-vertical
             color: 'black',
@@ -1308,37 +1299,51 @@
             symbol: 'circle', //"cross-thin"
             size: 15
           },
-          hovertemplate: "Limite rango: <b>%{y}</b><extra></extra>",
-          //hovertemplate: "",
+          hovertemplate: "Limite rango: %{y:.2f}<extra></extra>",
           showlegend: false
         }
       ], {
         title: {
           text: `Indicadores con desempeño ${desempeño}, ${fecha_deseada}`,
-          font: { size: 24, color: "black" },
-          x: 0.5
+          font: {
+            size: 24,
+            color: 'black',//"black"
+            weight: 'bold', 
+            family: 'Noto Sans'
+          },
+          x: 0.5,
+          y: 0.98
         },
-        margin: { b: 110, r: 10, l: 50, t:80 },
-        //xaxis: { title: "Indicador" },
-        yaxis: { title: "Valor" },
+        margin: { b: 90, r: 10, l: 20, t:80 },
         plot_bgcolor: 'rgba(0,0,0,0)',
         paper_bgcolor: 'rgba(0,0,0,0)',//'#f9f9f9',
         shadow: {
           enabled: true,
-          color: 'rgba(0,0,0,0.2)',
+          color: 'rgba(209,209,209,0.2)',
           x: 3,
           y: 3,
           blur: 10
         },
         uniformtext: {
-          //mode: 'hide', // Oculta etiquetas que no caben
-          minsize: 14   // Tamaño mínimo de fuente
+          mode: 'show', // 
+          minsize: 12   // Tamaño mínimo de fuente
+        },
+        hovermode: 'x unified',
+        hoverlabel: { 
+          bgcolor: 'white',
+          font: { family: 'Noto Sans', size: 12}
+        },
+        yaxis: { 
+          title: "Valor",
+          showticklabels: false
         },
         xaxis: {
-          /*tickangle: -25, // Puedes probar con -90 si lo quieres vertical*/
+          unifiedhovertitle: { text: '<b>%{x}</b>' },
+          tickangle: -90, // Puedes probar con -90 si lo quieres vertical
           tickfont: {
             size: 14,
-            weight: 'bold'
+            weight: 'bold',
+            family: 'Noto Sans'
           }
         }
       }
@@ -1355,6 +1360,12 @@
 
     const cuerpoTabla_1 = document.getElementById("cuerpo_tabla_1");
     cuerpoTabla_1.innerHTML = "";
+
+    const cuerpoTabla_peor = document.getElementById('cuerpo_peor');
+    const cuerpoTabla_mejor = document.getElementById('cuerpo_mejor');
+    cuerpoTabla_peor.innerHTML = '';
+    cuerpoTabla_mejor.innerHTML = '';
+    
     obs_indicadores = (indicadores2.length < 5) ? indicadores2.length : 5;
     for (i = 0; i < obs_indicadores; i++){
       const fila = document.createElement("tr");
@@ -1477,10 +1488,6 @@
     const mejores_sort = Object.fromEntries(mejores_sort_);
     //console.log(peores_sort, mejores_sort);
 
-    const cuerpoTabla_peor = document.getElementById('cuerpo_peor');
-    const cuerpoTabla_mejor = document.getElementById('cuerpo_mejor');
-    cuerpoTabla_peor.innerHTML = '';
-    cuerpoTabla_mejor.innerHTML = '';
     // -----------------------------------------------
     Object.entries(peores_sort).map(([indicador, valores]) => {
       // Dividir entre procesos / normativos
@@ -1533,7 +1540,7 @@
     const nombres_indicadores = datosFiltrados3.map(row => row['nombre_indicador']);
     //console.log(textos);
     const nombre_indicador = nombres_indicadores[0];
-    const nombre_formateado = insertarSaltosLinea(nombre_indicador, 50);
+    const nombre_formateado = insertarSaltosLinea(nombre_indicador, 55);
 
     const indicadores = datosConError.map(row => row['indicadores']);
     const limites = datosConError.map(row => row['limite']);
@@ -1576,12 +1583,12 @@
         //textangle: -90,
         textfont: { size: 18, family: 'Noto Sans' },
         marker: { color: colores.slice(lim_inf,lim_sup) },
-        hovertemplate: '<b>%{label}</b><br>%{text}<extra></extra>',
-        hoverlabel: {
+        hovertemplate: '%{text}<extra></extra>',
+        /*hoverlabel: {
           bgcolor: colores.slice(lim_inf,lim_sup),
           //bordercolor: '#000000',
           font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-        },
+        },*/
         showlegend: false
       },
       {
@@ -1601,40 +1608,60 @@
           symbol: 'circle', //"cross-thin"
           size: 15
         },
-        hovertemplate: "Limite rango: <b>%{y}</b><extra></extra>",
-        //hovertemplate: "",
+        hovertemplate: "Limite rango: %{y:.2f}<extra></extra>",
         showlegend: false
       }
     ], {
       title: {
-        text: `<b><span style="font-size:14px;">${nombre_formateado}</span><br>${indicador_deseado} - ${unidad_deseada}</b><br>`,
-        font: { size: 12, color: "black" },
-        x: 0.5
+        text: `<span>${nombre_formateado}</span><br>${indicador_deseado} - ${unidad_deseada}<br>`,
+        font: {
+          size: 18,
+          color: 'black',//"black"
+          weight: 'bold',
+          family: 'Noto Sans'
+        },
+        x: 0.5,
+        y: 0.95 
       },
-      margin: { b: 110, t:60, l:40, r:5 }, 
-      //xaxis: { title: "Fechas" },
-      yaxis: { title: "Valor" },     
+      margin: { b: 110, t:80, l:10, r:5 },   
       plot_bgcolor: 'rgba(0,0,0,0)',
       paper_bgcolor: 'rgba(0,0,0,0)',
       uniformtext: {
-        //mode: 'show', // Oculta etiquetas que no caben
+        mode: 'show', // Oculta etiquetas que no caben
         minsize: 12   // Tamaño mínimo de fuente
       },
+      hovermode: 'x unified',
+      hoverlabel: { 
+        bgcolor: 'white',
+        font: { family: 'Noto Sans', size: 12}
+      },
+      yaxis: {
+        showticklabels: false
+      },
       xaxis: {
+        unifiedhovertitle: { text: '<b>%{x}</b>' },
         tickangle: -45, // Puedes probar con -90 si lo quieres vertical
         tickfont: {
           size: 14,
-          weight: 'bold'
+          weight: 'bold',
+          family: 'Noto Sans'
         }
       }
     });
   }
 
-  function actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada) {
+  function showLoader() {
+    document.getElementById('loader-overlay').style.display = 'flex';
+  } 
+
+  async function actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada) {
     const datosFiltrados5__ = filtrarUnidadIndicador(datos, unidad_deseada, indicador_deseado);
     const datosFiltrados5 = filtrarUnidadFecha(datosFiltrados5__, unidad_deseada, fecha_deseada);
     console.log(datosFiltrados5);
     console.log('-------- Aquiiii entro -------')
+    document.getElementById('loader-overlay').style.display = 'flex';
+    //loader.classList.add('show-loader');
+    console.log('Loader flex')
     
     const datosFiltrados5_ = filtrarNumDen(datos_numden, indicador_deseado);
     //console.log(datosFiltrados5_);
@@ -1789,15 +1816,27 @@
 
     // Matriz Z basada en condición: y >= 350
     // const z = y.map(yVal => x.map(() => (yVal >= 350 ? 1 : null)));
-    format_den = insertarSaltosLinea(nombre_den, 50);
+    format_den = insertarSaltosLinea(nombre_den, 80);
     format_num = insertarSaltosLinea(nombre_num, 50);
-    const textos2 = y.map((valor, i) => {
-      valy = valor.toLocaleString('es-mx', {maximumFractionDigits: 2});
-      valx = x[i].toLocaleString('es-mx', {maximumFractionDigits: 2});
-      return `${valx} , ${valy}`;
-      });
-    //console.log(textos2);
 
+    const nRows = z.length;
+    const nCols = z[0].length;
+
+    const textos2 = [];
+
+    for (let i = 0; i < nRows; i++) {
+      const row = [];
+      for (let j = 0; j < nCols; j++) {
+        const valx = x[j].toLocaleString('es-mx', { maximumFractionDigits: 2 });
+        const valy = y[i].toLocaleString('es-mx', { maximumFractionDigits: 2 });
+        const res = ((y[i]/x[j])*f).toLocaleString('es-mx', { maximumFractionDigits: 2 });
+        row.push(`Num: ${valy}<br>Den: ${valx}<br>Valor: <b>${res}</b>`);
+      }
+      textos2.push(row);    }
+
+
+    //console.log(textos2);
+    //console.log(textos2.length, x.length, y.length)
     Plotly.react("numden",
       [{
         x: x,
@@ -1809,12 +1848,9 @@
           showlabels: false
         },
         colorscale: [[0, 'rgba(0,0,0,0)'], [1, 'rgba(0,200,200,0.3)']],
-        showscale: false,
-        //hoverinfo: 'skip',
-        name: texto,
         text: textos2,
-        textposition: 'outside',
-        hovertemplate: 'Num: %{y:,.2f}<br>Den: %{x:,.2f}<extra></extra>'
+        hoverinfo: 'text',
+        showscale: false
       }],
       {
         legend: {
@@ -1824,12 +1860,23 @@
           yanchor: 'top'
         },
         title: {
-          text: `<b>Valor actual. <br>Numerador/Denominador ${indicador_deseado} - <br>${unidad_deseada}, ${fecha_deseada}</b>`,
-          font: { size: 12, color: "black" }
+          text: `Valor actual, Numerador/Denominador<br>${indicador_deseado} — ${unidad_deseada}, ${fecha_deseada}`,
+          font: {
+            size: 18,
+            color: 'black',//"black"
+            weight: 'bold',
+            family: 'Noto Sans'
+          },
+          x: 0.5,
+          y: 0.95
+        },
+        font: {
+          family: 'Noto Sans',
+          color: 'black'
         },
         xaxis: { title: { text: `Den: ${format_den}` } },
         yaxis: { title: { text: `Num: ${format_num}` } },
-        margin: {r: 10},
+        margin: {r: 10, b: 40, t: 40},
         annotations: [{
           xref: 'paper',
           yref: 'paper',
@@ -1837,7 +1884,10 @@
           y: 0.75,
           text: `<b>RANGOS:<br><span style="color: green">Esperado:</span> ${rangoEsperado}<br><span style="color: orange">Medio:</span> ${rangoMedio}<br><span style="color: red">Bajo:</span> ${rangoBajo}</b>`,
           showarrow: false,
-          align: 'center'
+          align: 'left',
+          font: {
+            size: 14
+          }
         }]
       }
     ); // numden
@@ -1895,6 +1945,9 @@
 
     // punto actual
     addActualPoint('numden', punto_den, punto_num, color_deseado, f, res);
+    document.getElementById('loader-overlay').style.display = 'none';
+    //loader.classList.remove('show-loader');
+    console.log('Loader none')
   }
 
   function actualizarRankingPN(datos_pond, fecha_deseada){
@@ -1919,7 +1972,8 @@
           color: valores.color
         }))
         .sort((a, b) => b.pond_aju - a.pond_aju);  // De mayor a menor
-      
+
+      const unidades_sinPromedio = datosOrdenados_1.map(d => d.unidad);
       const sumaTotal = datosOrdenados_1.reduce((acc, d) => acc + d.pond_aju, 0);
       const promedio = sumaTotal / datosOrdenados_1.length;
       datosOrdenados_1.push({
@@ -1928,14 +1982,15 @@
         color: 'deepskyblue'
       })
       datosOrdenados_1.sort((a, b) => b.pond_aju - a.pond_aju);
-      //console.log(datosOrdenados_1, typeof datosOrdenados_1);
+
       const unidades = datosOrdenados_1.map(d => d.unidad); // etiquetas
       const valores = datosOrdenados_1.map(d => d.pond_aju);
       const colores_ranking = datosOrdenados_1.map(d => d.color);
       const textos = datosOrdenados_1.map((valor, i) => {
         const unidad = unidades[i];
-        const partes = unidad.split(' ');
-        return (partes.length >= 2) ? partes.slice(0, 2).join(' ') : partes[0];
+        const index = unidades_sinPromedio.indexOf(unidad) + 1;
+        const posicion = (index == 0) ? '' : (index+'° ');
+        return `<b>${posicion}</b>${unidad}`;
       })
 
       Plotly.react("ranking_1N",
@@ -1948,9 +2003,8 @@
             cliponaxis: false,
             textposition: 'outside',
             texttemplate: '<b>%{y:.2f}</b>',
-            textfont: {size: 25},
             marker: { color: colores_ranking },
-            hovertemplate: '<b>%{text}</b><br>%{y:.4f}<extra></extra>',
+            hovertemplate: '%{text}<br>%{y:.2f}<extra></extra>',
             hoverlabel: {
               bgcolor: colores_ranking,
               font: { family: 'Noto Sans', size: 18}
@@ -1967,8 +2021,7 @@
                 width: 8
               }
             },
-            hoverinfo: 'none',
-            hovertemplate: ''
+            hoverinfo: 'skip'
             /*width: [1.0]  // Ancho personalizado para esta barra*/
           }
         ],
@@ -1976,8 +2029,13 @@
           barmode: 'overlay',
           title: {
             text: `Ranking de Primer Nivel, ${fecha_deseada}`,
-            font: { size: 24, color: "black" },
-            x: 0.5
+            font: { size: 24, color: "black", weight: 'bold' },
+            x: 0.5,
+            y: 0.98
+          },
+          font: {
+            family: 'Noto Sans',
+            color: 'black'
           },
           width: document.getElementById('ranking_1N').clientWidth*0.95,
           height: 500,
@@ -1993,15 +2051,19 @@
             blur: 10
           },
           showlegend: false,
-          margin: { b: 200, l:20, r:10, t:60 },
+          margin: { b: 180, l:10, r:5, t:50 },
           uniformtext: {
             minsize: 10   // Tamaño mínimo de fuente
           },
           padding: {b: 150},
+          yaxis: {            
+            showticklabels: false,
+          },
           xaxis: {
             tickangle: -90, //
             tickfont: {
-              size: 12
+              size: 12,
+              weight: 'bold'
             }
           }
         }
@@ -2035,6 +2097,8 @@
         color: valores.color
       }))
       .sort((a, b) => b.pond_aju - a.pond_aju);  // De mayor a menor
+
+    const unidades_sinPromedio = datosOrdenados_2.map(d => d.unidad);
     const sumaTotal = datosOrdenados_2.reduce((acc, d) => acc + d.pond_aju, 0);
     const promedio = sumaTotal / datosOrdenados_2.length;
     datosOrdenados_2.push({
@@ -2049,8 +2113,9 @@
     const colores_ranking = datosOrdenados_2.map(d => d.color);
     const textos = datosOrdenados_2.map((valor, i) => {
       const unidad = unidades[i];
-      const partes = unidad.split(' ');
-      return (partes.length >= 2) ? partes.slice(0, 2).join(' ') : partes[0];
+      const index = unidades_sinPromedio.indexOf(unidad) + 1;
+      const posicion = (index == 0) ? '' : (index+'° ');
+      return `<b>${posicion}</b>${unidad}`;
     })
 
     Plotly.react("ranking_2N",
@@ -2063,20 +2128,18 @@
           cliponaxis: false,
           textposition: 'outside',
           texttemplate: '<b>%{y:.2f}</b>',
-          /*textangle: -45,*/
           textfont: {size: 20},
           marker: { color: colores_ranking },
           hovertemplate: '<b>%{text}</b><br>%{y:.4f}<extra></extra>',
           hoverlabel: {
             bgcolor: colores_ranking,
-            font: { family: 'Noto Sans', size: 20}
+            font: { family: 'Noto Sans', size: 18}
           }
         },
         {
           x: [unidad_deseada],
           y: [valores[unidades.indexOf(unidad_deseada)]],
           type: 'bar',
-          /*name: 'Unidad resaltada',*/
           marker: { 
             color: colores_ranking[unidades.indexOf(unidad_deseada)],
             line: {
@@ -2084,8 +2147,7 @@
               width: 8
             }
           },
-          hoverinfo: 'none',
-          hovertemplate: ''
+          hoverinfo: 'skip',
           /*width: [1.0]  // Ancho personalizado para esta barra*/
         }
       ],
@@ -2093,13 +2155,17 @@
         barmode: 'overlay',
         title: {
           text: `Ranking de Segundo Nivel, ${fecha_deseada}`,
-          font: { size: 24, color: "black" },
-          x: 0.5
+          font: { size: 24, color: "black", weight: 'bold' },
+          x: 0.5,
+          y: 0.98
+        },
+        font: {
+          family: 'Noto Sans',
+          color: 'black'
         },
         autosize: true,
         width: document.getElementById('ranking_2N').clientWidth*0.95,
         height: 500,
-        yaxis: { title: "Valor" },
         plot_bgcolor: 'rgba(0,0,0,0)',
         paper_bgcolor: 'rgba(0,0,0,0)',
         shadow: {
@@ -2114,10 +2180,14 @@
           minsize: 14   // Tamaño mínimo de fuente
         },
         showlegend: false,
+        yaxis: {        
+          showticklabels: false,
+        },
         xaxis: {
-          tickangle: -25, // /*Puedes probar con -90 si lo quieres vertical*/
+          tickangle: 0, // /*Puedes probar con -90 si lo quieres vertical*/
           tickfont: {
-            size: 12
+            size: 14,
+            weight: 'bold'
           }
         }
       }
@@ -2187,10 +2257,6 @@
             color: col_estimados,
             line: {color: col_estimados, width: 1}
           },
-          /*hoverlabel: {
-            bgcolor: color_deseado,
-            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-          },*/
           showlegend: false,
           name: 'Pond. Estimada',
           hoverinfo: 'none'
@@ -2210,14 +2276,11 @@
             line: {color: col_estimados, width: 1}
           },
           hoverlabel: {
-            bgcolor: 'white',
             bordercolor: 'white',
-            font: { family: 'Noto Sans', color: 'black', size: 16}
+            font: { family: 'Noto Sans', size: 16}
           },
           showlegend: false,
-          /*name: 'Pond. Obtenida',*/
           hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
-          /*hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,*/
           hovermode: 'closest'
         }
       ], 
@@ -2225,13 +2288,17 @@
         height: 500,
         width: document.getElementById('ranking2').clientWidth*0.9,
         autosize: true,
-        margin: {b: 20, l: 60, t:80, r:30},
+        margin: {b: 10, l: 80, t:80, r:30},
         title: {
           text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
-          font: { size: 16, color: "black" },
-          x: 0.5
+          font: { size: 16, color: "black", weight: 'bold' },
+          x: 0.5,
+          y: 0.95
         },
-        /*yaxis: { title: "Valor" },*/
+        font: {
+          family: 'Noto Sans',
+          color: 'black'
+        },
         plot_bgcolor: 'rgba(0,0,0,0)',
         paper_bgcolor: 'rgba(0,0,0,0)',
         shadow: {
@@ -2242,15 +2309,17 @@
           blur: 10
         },
         uniformtext: {
-          minsize: 14   // Tamaño mínimo de fuente
+          minsize: 10   // Tamaño mínimo de fuente
         },
         barmode: 'overlay',
-        xaxis: {
-          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+        yaxis: {
           tickfont: {
             size: 16,
             weight: 'bold'
           }
+        },
+        xaxis: {
+          showticklabels: false
         }
       }
     ); // ranking2
@@ -2324,10 +2393,6 @@
             color: col_estimados,
             line: {color: col_estimados, width: 1}
           },
-          /*hoverlabel: {
-            bgcolor: color_deseado,
-            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-          },*/
           showlegend: false,
           name: 'Pond. Estimada',
           hoverinfo: 'none'
@@ -2347,27 +2412,28 @@
             line: {color: col_estimados, width: 1}
           },
           hoverlabel: {
-            bgcolor: 'white',
             bordercolor: 'white',
-            font: { family: 'Noto Sans', color: 'black', size: 20}
+            font: { family: 'Noto Sans', size: 20}
           },
           showlegend: false,
-          /*name: 'Pond. Obtenida',
-          hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,*/
           hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
         }
       ], 
       {
         height: 500,
         width: document.getElementById('ranking2-2').clientWidth*0.9,
-        margin: {b: 40, l: 60, t:60, r:30},
+        margin: {b: 10, l: 80, t:60, r:30},
         autosize: true,
         title: {
           text: `Ponderación obtenida vs estimada<br> - ${unidad_deseada}, <br>${fecha_deseada}`,
-          font: { size: 16, color: "black" },
-          x: 0.5
+          font: { size: 16, color: "black", weight: 'bold' },
+          x: 0.5,
+          y: 0.95
         },
-        /*yaxis: { title: "Valor" },*/
+        font: {
+          family: 'Noto Sans',
+          color: 'black'
+        },
         plot_bgcolor: 'rgba(0,0,0,0)',
         paper_bgcolor: 'rgba(0,0,0,0)',
         shadow: {
@@ -2378,15 +2444,17 @@
           blur: 10
         },
         uniformtext: {
-          minsize: 14   // Tamaño mínimo de fuente
+          minsize: 10   // Tamaño mínimo de fuente
         },
         barmode: 'overlay',
-        xaxis: {
-          /*tickangle: -45, // Puedes probar con -90 si lo quieres vertical*/
+        yaxis: {
           tickfont: {
             size: 16,
             weight: 'bold'
-          }
+          }          
+        },
+        xaxis: {
+          showticklabels: false,
         }
       }
     ); // ranking2-2
@@ -2472,8 +2540,8 @@
             line: {color: col_estimados, width: 1}
           },
           hoverlabel: {
-            bgcolor: 'white',
-            font: { family: 'Noto Sans', color: 'black', size: 20}
+            bordercolor: 'white',
+            font: { family: 'Noto Sans', size: 20}
           },
           margin: { b: 150 },
           showlegend: false,
@@ -2484,14 +2552,17 @@
       {
         height: 400,
         width: document.getElementById('ranking2').clientWidth*0.9,
-        margin: {b: 65, l: 60, t:40, r:30},
+        margin: {b: 30, l: 20, t:40, r:20},
         autosize: true,
         title: {
           text: `Ponderación obtenida vs estimada - ${unidad_deseada}, ${fecha_deseada}`,
-          font: { size: 24, color: "black" },
+          font: { size: 24, color: "black", weight: 'bold' },
           x: 0.5
         },
-        /*yaxis: { title: "Valor" },*/
+        font: {
+          family: 'Noto Sans',
+          color: 'black'
+        },
         plot_bgcolor: 'rgba(0,0,0,0)',
         paper_bgcolor: 'rgba(0,0,0,0)',
         shadow: {
@@ -2505,8 +2576,10 @@
           minsize: 14   // Tamaño mínimo de fuente
         },
         barmode: 'overlay',
+        yaxis: {
+          showticklabels: false
+        },
         xaxis: {
-          tickangle: -45, // /* Puedes probar con -90 si lo quieres vertical*/
           tickfont: {
             size: 16,
             weight: 'bold'
@@ -2550,6 +2623,8 @@
   puntoResaltado = null;
   n_indicadores = "--";
   fechas = ['enero 2025', 'febrero 2025'];
+
+  const loader = document.getElementById('loader-overlay');
   
   // ---------- RANKING ------------------ //
   nivel_deseado = 'Primer Nivel';
@@ -2646,7 +2721,7 @@
       document.getElementById('ranking_1N').hidden = true;
       document.getElementById('ranking_2N').hidden = true;
       document.getElementById('ranking2').hidden = true;
-      document.getElementById('ranking2-2').hidden = true;
+      //document.getElementById('ranking2-2').hidden = true;
       // Set Oaxaca as selected
       document.querySelectorAll("button").forEach(b => {
         if (b.textContent == 'Oaxaca'){
@@ -2654,6 +2729,8 @@
         }
       }); // remover estilo activo a todos.
       document.getElementById('loader-overlay').style.display = 'none';
+      loader.classList.remove('show-loader');
+      console.log('Loader none')
       // Inicializar calendario
       console.log(fechas);
       updateYearDisplay();
@@ -2679,85 +2756,6 @@
 
   // Call this instead of your original fetch
   window.addEventListener('DOMContentLoaded', loadFirebaseData);
-
-  /*fetch("https://script.google.com/macros/s/AKfycbzjBjlZ0rtjIVj7dI009Hk0Meo6x_YyafirEKfjGC11jlwKTFIoThzHuw3lu_Zdwl-zKA/exec") //"https://script.google.com/macros/s/AKfycbxbdwnq17ukuBOPxtHR52a12NcrR4V5LiTujKCPFWMKoYztEFmIBk6pyeyHG2UwVMamog/exec")
-    .then(response => response.json())
-    .then(data => {
-      console.log(typeof data);
-      data_1 = data.resultados;
-      datos = data_1.map(row => ({
-        fecha: formatearFecha(row['FECHA']),
-        unidad: row["UNIDAD"],
-        ind: row["IND"],
-        indicador: row["INDICADOR"],
-        nombre_indicador: row["NOMBRE INDICADOR"],
-        valor: parseFloat(row["VALOR"]),
-        color: calcularColor(row["VALOR"], row["ESPERADO"], row["MEDIO"], row["BAJO"]),
-        esperado: obtenerRangoNumero(row['ESPERADO']),
-        medio: obtenerRangoNumero(row['MEDIO']),
-        bajo: obtenerRangoNumero(row['BAJO']),
-        esperado_: row['ESPERADO'],
-        medio_: row['MEDIO'],
-        bajo_: row['BAJO'],
-        numerador: row['NUM'],
-        denominador: row['DEN']
-      }));
-      data_2 = data.ponderaciones;
-      datos_pond = data_2.map(row => ({
-        fecha: formatearFecha(row['FECHA']),
-        indicador: row['INDICADOR'],
-        unidad: row['UNIDAD MEDICA'],
-        ind: row['IND'],
-        pond_est: row['POND. ESTIMADA'],
-        pond_obt: row['POND. OBTENIDA'],
-        nivel: row['NIVEL']
-      }));
-      data_3 = data.numden;
-      datos_numden = data_3.map(row => ({
-        indicador: row['Indicador'],
-        nombre_indicador: row['Nombre'],
-        nombre_num: row['Num'],
-        nombre_den: row['Den'],
-        factor: row['Factor'],
-        den_fijo: row['den_fijo'] == 1 ? true : false
-      }));
-    console.log(datos, datos_pond, datos_numden, typeof datos);
-    console.log("Termina de preparar los datos. Comienza a graficar.");
-    datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
-    indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
-    actualizarGrafica4(datos, unidad_deseada, indicadores_d[0], desempeño);
-    actualizarRankingPN(datos_pond, fecha_deseada);
-    actualizarRankingSN(datos_pond, fecha_deseada);
-    //actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
-    actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
-    document.getElementById('ranking_1N').hidden = true;
-    document.getElementById('ranking_2N').hidden = true;
-    document.getElementById('ranking2').hidden = true;
-    document.getElementById('ranking2-2').hidden = true;
-    // Set Oaxaca as selected
-    document.querySelectorAll("button").forEach(b => {
-      if (b.textContent == 'Oaxaca'){
-        b.classList.add('activo');
-      }
-    }); // remover estilo activo a todos.
-    document.getElementById('loader-overlay').style.display = 'none';
-    // Inicializar calendario
-    console.log(fechas);
-    updateYearDisplay();
-    updateSelectedMonth();
-    selector.value = unidad_deseada;
-    if (fecha_deseada == fechas[fechas.length - 1]){
-      document.getElementById('prev-month').disabled = false;
-      document.getElementById('next-month').disabled = true;
-    } else if (fecha_deseada == fechas[0]){      
-      document.getElementById('prev-month').disabled = true;
-      document.getElementById('next-month').disabled = false;
-    } else{
-      document.getElementById('prev-month').disabled = false;
-      document.getElementById('next-month').disabled = false;
-    }
-    actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
-  });*/
 
   Plotly.newPlot("ranking_1N",
     [{
@@ -3304,6 +3302,8 @@
 
   console.log('Terminó una gráfica, empezando a comunicarse.');
   document.getElementById('loader-overlay').style.display = 'flex';
+  loader.classList.add('show-loader');
+  console.log('Loader flex')
 
   // ---------- 8 -------------
   
@@ -3458,10 +3458,9 @@
   });
 
   document.getElementById("indicadores_1").on('plotly_click', function(data4) {
+    loader.classList.add('show-loader');
     var punto = data4.points[0];
     indicador_deseado = punto.x;
-    // console.log('click en:',punto);
-    // Actualizando Graficas
     actualizarGrafica4(datos, unidad_deseada, indicador_deseado, desempeño);
     actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
@@ -3505,5 +3504,7 @@
   </script>
 </body>
 </html>
+
+
 
 
