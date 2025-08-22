@@ -1368,9 +1368,14 @@
     
     obs_indicadores = (indicadores2.length < 5) ? indicadores2.length : 5;
     for (i = 0; i < obs_indicadores; i++){
+      datos_ind = datos_numden.filter(d =>
+        d.indicador === indicadores2[i]);
+      txt_ind = datos_ind[0].nombre_indicador;
       const fila = document.createElement("tr");
       fila.innerHTML = `
-        <td style="padding: 4px; border: 1px solid #ccc;"><b>${indicadores2[i]}</b></td>
+        <td title="${txt_ind}" style="padding: 4px; border: 1px solid #ccc; font-size: 14px;">
+          <b>${indicadores2[i]}</b>
+        </td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center";>${valores2[i].toFixed(2)}</td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center";>${errores2[i].toFixed(2)}</td>
         <td style="padding: 1px; border: 1px solid #ccc; font-size:40px; text-align:center;"><span style="color: ${color_deseado};">■</span><span style="font-size:25px;">➔</span><span style="color: ${colores_2[i]};">■</span></td>
@@ -1495,10 +1500,16 @@
       if (procesos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.6); } 
       else if (normativos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.4); }
 
+      datos_ind = datos_numden.filter(d =>
+        d.indicador === indicador);
+      txt_ind = datos_ind[0].nombre_indicador;
+      
       let pond_comp = `▼${Math.abs(valores.pond_comp).toFixed(3)}`;       
       const fila = document.createElement("tr");
       fila.innerHTML = `
-        <td style="padding: 4px; border: 1px solid #ccc; font-size: 14px;"><b>${indicador}</b></td>
+        <td title="${txt_ind}" style="padding: 4px; border: 1px solid #ccc; font-size: 14px;">
+          <b>${indicador}</b>
+        </td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_ant.toFixed(3)}</td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_act.toFixed(3)}</td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center; color: red; "><b>${pond_comp}</b></td>
@@ -1511,18 +1522,22 @@
       if (procesos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.6); } 
       else if (normativos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.4); }
 
+      datos_ind = datos_numden.filter(d =>
+        d.indicador === indicador);
+      txt_ind = datos_ind[0].nombre_indicador;
+
       let pond_comp = `▲${Math.abs(valores.pond_comp).toFixed(3)}`;       
       const fila = document.createElement("tr");
       fila.innerHTML = `
-        <td style="padding: 4px; border: 1px solid #ccc; font-size: 14px;"><b>${indicador}</b></td>
+        <td title="${txt_ind}" style="padding: 4px; border: 1px solid #ccc; font-size: 14px;">
+          <b>${indicador}</b>
+        </td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_ant.toFixed(3)}</td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center;">${valores.pond_act.toFixed(3)}</td>
         <td style="padding: 4px; border: 1px solid #ccc; text-align: center; color: green; "><b>${pond_comp}</b></td>
       `;//*/
         cuerpoTabla_mejor.appendChild(fila);
     });
-
-
     return indicadores2;
   }
 
@@ -3501,6 +3516,7 @@
   </script>
 </body>
 </html>
+
 
 
 
