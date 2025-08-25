@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <script src="all.js"></script>
   <title>INDICADORES</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <!--<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>-->
   <script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
@@ -37,8 +38,6 @@
       padding: 20px 20px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       z-index: 1000;
-
-      /*transform: scale(1) !important;*/
       font-size: 20px;
     }
     body { 
@@ -79,14 +78,12 @@
     }
     .grafica {
       flex: 1;
-      /*height: 500px;*/
     }
     #mapa {
       flex: 1;
       max-width: 60%;
     }
     #desempeños {
-      /*flex: 1;*/
       max-width: 20%;
       background: white;
       border-radius: 16px;
@@ -95,7 +92,6 @@
       font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
       border: 1px solid rgba(0,0,0,0.05);
       font-size: 12px;
-      /*overflow: hidden;*/
       margin-left: auto;
       margin-right: auto;
     }
@@ -119,16 +115,8 @@
       margin-left: auto;
       margin-right: auto;
       max-width: 30%;
-      /*width: 30%;*/
     }
-    /*#ranking2 .hovertext text{ 
-      
-      transform-origin: center;
-      transform: translate(10px);
-      transform: rotate(-60deg); 
-    }*/
     #indicadores_1, #indicadores_2, #numden {
-      /*height: 700px;*/
       background: white;
       border-radius: 16px;
       padding: 20px;
@@ -138,10 +126,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-    #numden{
-      /*max-width: 30%;*/
-    }
-
     .btn-unidad{
       min-width: 40px;
       width: 110px;/*130px;*/
@@ -222,7 +206,6 @@
       font-family: 'Noto Sans';/*''Segoe UI', system-ui, sans-serif';*/
       border: 1px solid rgba(0,0,0,0.05);
       overflow: hidden;
-      /*height: 70%;*/
       margin-left: auto;
       margin-right: auto;
       margin-bottom: 0px;
@@ -346,7 +329,6 @@
     .botones{
       display: flex;
       flex-wrap: wrap;
-      /*width: 100%;*/
       justify-content: center;
       gap: 18px 8px;
       margin-left: auto;
@@ -361,21 +343,18 @@
       border: 1px solid rgba(0,0,0,0.05);
     }
     #botones1{
-      /*width: 100%; */
       grid-row: 1; 
       grid-column: 3;
       margin-top: auto;
       margin-bottom: 10px;
     }
     #botones2{
-      /*width: 100%; */
       grid-row: 1; 
       grid-column: 5;
       margin-top: auto;
       margin-bottom: 10px;
     }
     .rank_unidad {
-      /*flex: 1;*/
       background: rgba(0, 0, 0, 0.25);
       color: #000000;
       font-weight: 600;
@@ -401,7 +380,6 @@
       padding: 8px 15px;
       border-radius: 30px;
       box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-      /*min-width: 200px;*/
       display: none;
       margin-left: auto;
       height: 30px;
@@ -413,7 +391,6 @@
       font-size: 12px;
       cursor: pointer;
       color: #006657;
-      /*width: 30px;*/
       height: 30px;
       border-radius: 50%;
       transition: all 0.3s;
@@ -426,7 +403,6 @@
       transform: scale(1.1);
     }
     .nav-btn-2:disabled {
-      /*background: rgba(0,0,0, 0.1);*/
       color: rgba(0,0,0, 0.1);;/*4CAF50*/
       transform: scale(1.1);
     }
@@ -434,7 +410,6 @@
       text-align: center;
       min-width: 130px;
       color: black;
-      /*font-weight: 300;*/
     }
 
     .compact-unit {
@@ -451,21 +426,16 @@
       width: fit-content;
     }
     #unidad_select {
-      /*padding: 10px 20px;*/
       border: none;
       border-radius: 8px;
       font-size: 16px;
       text-align: center;
       color: black;
-      /*background: linear-gradient(to bottom, #f5f5f5, #ecf9f7);
-      background: linear-gradient(to bottom, #ecf9f7, #dff5f2);*/
       background: #dff5f2;
-      /*box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);*/
       cursor: pointer;
       transition: all 0.3s;
     }
     #unidad_select:hover {
-      /*background: linear-gradient(to bottom, #ecf9f7, #dff5f2);*/
       background: #ecf9f7;
     }
     #unidad_select:focus {
@@ -771,7 +741,6 @@
   }
   function colorByPonderacion(resultado){
     //let resultado = obtenido / estimado * 100;
-
     if (resultado >= 80) return 'rgba(0,88,78,1)';
     if (resultado >= 60) return 'rgba(255,192,0,1)';
     return 'rgba(255,0,0,1)';
@@ -850,19 +819,7 @@
       } else {
         resultado_2.color = 'red';
       }
-    /*  
-    Object.values(resultado_2).forEach(obj => {
-      console.log(pond_proc_obt);
-      obj.pond_aju = ((obj.pond_proc_obt/obj.pond_proc_est*60) + (obj.pond_norm_obt/obj.pond_norm_est*40));
-      if (obj.pond_aju >= 80) {
-        obj.color = 'green';
-      } else if (obj.pond_aju >= 60){
-        obj.color = 'orange';
-      } else {
-        obj.color = 'red';
-      }
-    });*/
-    console.log(resultado_2);
+    //console.log(resultado_2);
     return resultado_2;
   }
 
@@ -1243,16 +1200,14 @@
     }
 
     const datosFiltrados2 = filtrarDesempeño(datosFiltrados, color_deseado);
-    console.log('DATOS FILTRADOS 2: ',datosFiltrados2);
+    //console.log('DATOS FILTRADOS 2: ',datosFiltrados2);
     // Calcular errores y armar nuevo array
     const datosConError = filtrarErrores(datosFiltrados2);
     const datosConError2 = datosConError.slice();
 
     // Ordenar por valor absoluto del error de menor a mayor
     datosConError2.sort((a, b) => Math.abs(a.error) - Math.abs(b.error));
-    console.log(datosConError, datosConError2);
-    /*
-    */
+    //console.log(datosConError, datosConError2);
     // Crear arrays para la gráfica
     const indicadores = datosConError.map(row => row.indicador);
     const valores = datosConError.map(row => row.valor);
@@ -1371,6 +1326,7 @@
       datos_ind = datos_numden.filter(d =>
         d.indicador === indicadores2[i]);
       txt_ind = datos_ind[0].nombre_indicador;
+
       const fila = document.createElement("tr");
       fila.innerHTML = `
         <td title="${txt_ind}" style="padding: 4px; border: 1px solid #ccc; font-size: 14px;">
@@ -1392,7 +1348,7 @@
     datos_mes_ant = filtrarUnidadFecha(datos_pond, unidad_deseada, fecha_ant);
     
     rank_mes_act = agruparRanking(datos_mes_act);
-    rank_mes_ant = agruparRanking(datos_mes_ant);
+    rank_mes_ant = agruparRanking(datos_mes_ant);    
 
     //console.log(fecha_deseada ,datos_mes_act, fecha_ant, datos_mes_ant);
     const a = rank_mes_act.inds;
@@ -1503,7 +1459,7 @@
       datos_ind = datos_numden.filter(d =>
         d.indicador === indicador);
       txt_ind = datos_ind[0].nombre_indicador;
-      
+
       let pond_comp = `▼${Math.abs(valores.pond_comp).toFixed(3)}`;       
       const fila = document.createElement("tr");
       fila.innerHTML = `
@@ -1521,7 +1477,6 @@
       [ind, num] = indicador.split(' ');
       if (procesos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.6); } 
       else if (normativos.includes(ind)){ valores.pond_comp = (valores.pond_comp * 0.4); }
-
       datos_ind = datos_numden.filter(d =>
         d.indicador === indicador);
       txt_ind = datos_ind[0].nombre_indicador;
@@ -1667,11 +1622,11 @@
   async function actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada) {
     const datosFiltrados5__ = filtrarUnidadIndicador(datos, unidad_deseada, indicador_deseado);
     const datosFiltrados5 = filtrarUnidadFecha(datosFiltrados5__, unidad_deseada, fecha_deseada);
-    console.log(datosFiltrados5);
-    console.log('-------- Aquiiii entro -------')
+    //console.log(datosFiltrados5);
+    //console.log('-------- Aquiiii entro -------')
     document.getElementById('loader-overlay').style.display = 'flex';
     //loader.classList.add('show-loader');
-    console.log('Loader flex')
+    //console.log('Loader flex')
     
     const datosFiltrados5_ = filtrarNumDen(datos_numden, indicador_deseado);
     //console.log(datosFiltrados5_);
@@ -1695,8 +1650,6 @@
         rango2 = datosFiltrados5[0]['esperado'];
       }
     }
-    /*const rango1 = datosFiltrados5[0]['esperado'].length > 0 ? datosFiltrados5[0]['esperado'][0] : datosFiltrados5[0]['esperado'];
-    const rango2 = datosFiltrados5[0]['esperado'].length > 0 ? datosFiltrados5[0]['esperado'][1] : 0;*/
     const punto_res = punto_num / punto_den * f;
     const nombre_num = datosFiltrados5_[0]['nombre_num'];
     const nombre_den = datosFiltrados5_[0]['nombre_den'];
@@ -1713,13 +1666,14 @@
         else if (rango1 == 0 && rango2 != 0){status_den = 'menorA';}
           else if (rango1 != 0 && rango2 != 0){status_den = 'ambos';};
     };
+    /*
     try{
       console.log('El status del numerador es:', status_num);
       console.log('El status del denominador es:', status_den);
     } catch(error){
       console.log('Denominador es fijo');
     }
-
+    */
     // Punto minimo
     let punto_num1 = 0;
     let punto_num2 = 0;
@@ -1757,7 +1711,7 @@
     for (let i = max_den*0.25; i <= max_den*1.5; i += max_den*1.5/steps) x.push(i);
     for (let j = max_num*0.25; j <= max_num*1.5; j += max_num*1.5/steps) y.push(j);
 
-    console.log('el rango de valores de den es:', max_den*0.25 ,'-', max_den*1.5, 'el rango de valores de num es: ', max_num*0.25 ,' -', max_num*1.5);
+    //console.log('el rango de valores de den es:', max_den*0.25 ,'-', max_den*1.5, 'el rango de valores de num es: ', max_num*0.25 ,' -', max_num*1.5);
 
     // Condición
     let condicion_num = null;
@@ -1821,7 +1775,7 @@
       }
     };
 
-    console.log(`La condicion es ${texto}`);  
+    //console.log(`La condicion es ${texto}`);  
     //console.log(x.length, y.length)
 
     // Matriz Z basada en condición: y >= 350
@@ -1842,8 +1796,8 @@
         const res = ((y[i]/x[j])*f).toLocaleString('es-mx', { maximumFractionDigits: 2 });
         row.push(`Num: ${valy}<br>Den: ${valx}<br>Valor: <b>${res}</b>`);
       }
-      textos2.push(row);    }
-
+      textos2.push(row);    
+    }
 
     //console.log(textos2);
     //console.log(textos2.length, x.length, y.length)
@@ -1907,7 +1861,7 @@
     let color = 'green';
     let name = '';
     if (den_fijo == true){
-      console.log('Al graficar el denominador es constante');      
+      //console.log('Al graficar el denominador es constante');      
       if (rango1 != 0){
         //const y1 = x.map(d => rango1 / f * punto_den);
         y2 = Array(steps).fill(rango1/f*punto_den);
@@ -1920,7 +1874,7 @@
         addLine('numden', x, y2, color, name);
       }
     } else{
-      console.log('Al graficar el denominador NO es constante')
+      //console.log('Al graficar el denominador NO es constante')
       if (rango1 != 0){
         y2 = x.map(d => rango1 / f * d);
         name = `Num > ${(rango1/f).toLocaleString('es-mx', {maximumFractionDigits: 2})} * Den`;
@@ -1935,7 +1889,7 @@
 
     // Linea constante poblacion
     if (den_fijo == true){
-      console.log('Se grafica el denominador constante y el punto de cambio.');
+      //console.log('Se grafica el denominador constante y el punto de cambio.');
       x2 = Array(steps).fill(punto_den);
       name = `Denominador = ${punto_den.toLocaleString('es-mx', {maximumFractionDigits: 2})}`;
       addLine('numden', x2, y, 'navy', name);
@@ -1959,7 +1913,7 @@
     addActualPoint('numden', punto_den, punto_num, color_deseado, f, res);
     document.getElementById('loader-overlay').style.display = 'none';
     //loader.classList.remove('show-loader');
-    console.log('Loader none')
+    //console.log('Loader none')
   }
 
   function actualizarRankingPN(datos_pond, fecha_deseada){
@@ -2002,7 +1956,7 @@
         const unidad = unidades[i];
         const index = unidades_sinPromedio.indexOf(unidad) + 1;
         const posicion = (index == 0) ? '' : (index+'° ');
-        return `<b>${posicion}</b>${unidad}`;
+        return `<b>${posicion} ${unidad}</b>`;
       })
 
       Plotly.react("ranking_1N",
@@ -2052,7 +2006,6 @@
           width: document.getElementById('ranking_1N').clientWidth*0.95,
           height: 500,
           autosize: false,
-          /*xaxis: { title: "Valor" },*/
           plot_bgcolor: 'rgba(0,0,0,0)',
           paper_bgcolor: 'rgba(0,0,0,0)',
           shadow: {
@@ -2127,7 +2080,7 @@
       const unidad = unidades[i];
       const index = unidades_sinPromedio.indexOf(unidad) + 1;
       const posicion = (index == 0) ? '' : (index+'° ');
-      return `<b>${posicion}</b>${unidad}`;
+      return `<b>${posicion} ${unidad}</b>`;
     })
 
     Plotly.react("ranking_2N",
@@ -2142,7 +2095,7 @@
           texttemplate: '<b>%{y:.2f}</b>',
           textfont: {size: 20},
           marker: { color: colores_ranking },
-          hovertemplate: '<b>%{text}</b><br>%{y:.2f}<extra></extra>',
+          hovertemplate: '%{text}<br>%{y:.2f}<extra></extra>',
           hoverlabel: {
             bgcolor: colores_ranking,
             font: { family: 'Noto Sans', size: 18}
@@ -2231,7 +2184,7 @@
       document.getElementById('rank_1').innerHTML = unidad.pond_aju.toFixed(2);
       document.getElementById('rank_unidad_1').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
       document.getElementById('rank_unidad_1').style.color = textColorByPonderacion(unidad.pond_aju);
-      console.log(unidad);
+      //console.log(unidad);
     } else {
       return;
     }
@@ -2239,6 +2192,9 @@
     const x_labels = grupo_indicadores.map(([nombre]) => nombre);
     const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
     const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const resultados = grupo_indicadores.map(([_, valor]) => {
+      return valor.pond_obt / valor.pond_est * 100;
+    });
     const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
       let resultado = valor.pond_obt / valor.pond_est * 100;
       return colorByPonderacion(resultado);
@@ -2250,8 +2206,12 @@
     const textos = x_labels.map((valor, i) => {
       const estimado = estimados[i];
       const obtenido = obtenidos[i];
+      const resultado = resultados[i];
       const faltante = estimado - obtenido;
-      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+      return `<b> — ${resultado.toFixed(2)}%</b><br>Ponderación Obtenida<br>${obtenido.toFixed(2)} de ${estimado.toFixed(2)} <br>Diferencia: ▼${Math.abs(faltante.toFixed(2))}`;
+    });
+    const txt_color = col_obtenidos.map((valor, i) => {
+      if (valor == 'rgba(255,192,0,1)'){ return 'black'; } else { return 'white'; }
     });
     //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
     Plotly.react("ranking2", 
@@ -2266,8 +2226,8 @@
           texttemplate: '<b>%{x:.1f}</b>',
           textfont: { size: 18, family: 'Noto Sans' },
           marker: { 
-            color: col_estimados,
-            line: {color: col_estimados, width: 1}
+            color: "rgba(0,0,0,0.2)", //col_estimados
+            line: {color: "rgba(0,0,0,0.2)", width: 1}
           },
           showlegend: false,
           name: 'Pond. Estimada',
@@ -2282,17 +2242,17 @@
           cliponaxis: false,
           textposition: 'inside',
           texttemplate: '<b>%{x:.1f}</b>',
-          textfont: { size: 18, family: 'Noto Sans' },
+          textfont: { size: 14, family: 'Noto Sans' },
           marker: { 
             color: col_obtenidos,
             line: {color: col_estimados, width: 1}
           },
           hoverlabel: {
             bordercolor: 'white',
-            font: { family: 'Noto Sans', size: 16}
+            font: { family: 'Noto Sans', size: 14, color: txt_color}
           },
           showlegend: false,
-          hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
+          hovertemplate: `<b>%{label}</b>%{text}<extra></extra>`,
           hovermode: 'closest'
         }
       ], 
@@ -2321,6 +2281,7 @@
           blur: 10
         },
         uniformtext: {
+          mode: 'show',
           minsize: 10   // Tamaño mínimo de fuente
         },
         barmode: 'overlay',
@@ -2367,7 +2328,7 @@
       document.getElementById('rank_2').innerHTML = unidad.pond_aju.toFixed(2);
       document.getElementById('rank_unidad_2').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
       document.getElementById('rank_unidad_2').style.color = textColorByPonderacion(unidad.pond_aju);
-      console.log(unidad);
+      //console.log(unidad);
     } else{
       return;
     }
@@ -2375,6 +2336,9 @@
     const x_labels = grupo_indicadores.map(([nombre]) => nombre);
     const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
     const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const resultados = grupo_indicadores.map(([_, valor]) => {
+      return valor.pond_obt / valor.pond_est * 100;
+    });
     const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
       const resultado = valor.pond_obt / valor.pond_est * 100;
       return colorByPonderacion(resultado);
@@ -2386,8 +2350,12 @@
     const textos = x_labels.map((valor, i) => {
       const estimado = estimados[i];
       const obtenido = obtenidos[i];
+      const resultado = resultados[i];
       const faltante = estimado - obtenido;
-      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+      return `<b> — ${resultado.toFixed(2)}%</b><br>Ponderación Obtenida<br>${obtenido.toFixed(2)} de ${estimado.toFixed(2)} <br>Diferencia: ▼${Math.abs(faltante.toFixed(2))}`;
+    });
+    const txt_color = col_obtenidos.map((valor, i) => {
+      if (valor == 'rgba(255,192,0,1)'){ return 'black'; } else { return 'white'; }
     });
     //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
     Plotly.react("ranking2-2", 
@@ -2402,8 +2370,8 @@
           texttemplate: '<b>%{x:.1f}</b>',
           textfont: { size: 18, family: 'Noto Sans' },
           marker: { 
-            color: col_estimados,
-            line: {color: col_estimados, width: 1}
+            color: "rgba(0,0,0,0.2)", //col_estimados
+            line: {color: "rgba(0,0,0,0.2)", width: 1}
           },
           showlegend: false,
           name: 'Pond. Estimada',
@@ -2418,17 +2386,17 @@
           cliponaxis: false,
           textposition: 'inside',
           texttemplate: '<b>%{x:.1f}</b>',
-          textfont: { size: 18, family: 'Noto Sans' },
+          textfont: { size: 14, family: 'Noto Sans' },
           marker: { 
             color: col_obtenidos,
             line: {color: col_estimados, width: 1}
           },
           hoverlabel: {
             bordercolor: 'white',
-            font: { family: 'Noto Sans', size: 20}
+            font: { family: 'Noto Sans', size: 14, color: txt_color}
           },
           showlegend: false,
-          hovertemplate: `<b>%{label}</b><br>%{text}<extra></extra>`,
+          hovertemplate: `<b>%{label}</b>%{text}<extra></extra>`,
         }
       ], 
       {
@@ -2489,9 +2457,9 @@
       document.getElementById('rank_2').innerHTML = unidad.pond_aju.toFixed(2);
       document.getElementById('rank_unidad_2').style.background = colorByPonderacion(unidad.pond_aju).replace(",1)",",.8)");
       document.getElementById('rank_unidad_2').style.color = textColorByPonderacion(unidad.pond_aju);
-      console.log(unidad);
+      //console.log(unidad);
     } else{
-      console.log('No hay nada')
+      //console.log('No hay nada')
       return;
     }
 
@@ -2500,6 +2468,9 @@
     const x_labels = grupo_indicadores.map(([nombre]) => nombre);
     const estimados = grupo_indicadores.map(([_, valor]) => valor.pond_est);
     const obtenidos = grupo_indicadores.map(([_, valor]) => valor.pond_obt);
+    const resultados = grupo_indicadores.map(([_, valor]) => {
+      return valor.pond_obt / valor.pond_est * 100;
+    });
     const col_obtenidos = grupo_indicadores.map(([_, valor]) => {
       const resultado = valor.pond_obt / valor.pond_est * 100;
       return colorByPonderacion(resultado);
@@ -2511,8 +2482,12 @@
     const textos = x_labels.map((valor, i) => {
       const estimado = estimados[i];
       const obtenido = obtenidos[i];
+      const resultado = resultados[i];
       const faltante = estimado - obtenido;
-      return `${obtenido.toFixed(2)} / ${estimado.toFixed(2)} <br>(-${faltante.toFixed(2)})`;
+      return `<b> — ${resultado.toFixed(2)}%</b><br>Ponderación Obtenida<br>${obtenido.toFixed(2)} de ${estimado.toFixed(2)} <br>Diferencia: ▼${Math.abs(faltante.toFixed(2))}`;
+    });
+    const txt_color = col_obtenidos.map((valor, i) => {
+      if (valor == 'rgba(255,192,0,1)'){ return 'black'; } else { return 'white'; }
     });
     //console.log(x_labels, estimados, obtenidos, col_obtenidos, col_estimados);
     Plotly.react("ranking2-2", 
@@ -2526,13 +2501,9 @@
           texttemplate: '<b>%{y:.1f}</b>',
           textfont: { size: 18, family: 'Noto Sans' },
           marker: { 
-            color: col_estimados,
-            line: {color: col_estimados, width: 1}
+            color: "rgba(0,0,0,0.2)",
+            line: {color: "rgba(0,0,0,0.2)", width: 1}
           },
-          /*hoverlabel: {
-            bgcolor: color_deseado,
-            font: { family: 'Noto Sans', color: (color_deseado=='orange' ? 'black':'white'), size: 20}
-          },*/
           margin: {b: 20, l: 60, t:40, r:30},
           showlegend: false,
           name: 'Pond. Estimada',
@@ -2553,12 +2524,17 @@
           },
           hoverlabel: {
             bordercolor: 'white',
-            font: { family: 'Noto Sans', size: 20}
+            bgcolor: col_obtenidos,
+            font: { 
+              family: 'Noto Sans', 
+              size: 14,
+              color: txt_color
+            }
           },
           margin: { b: 150 },
           showlegend: false,
           name: 'Pond. Obtenida',
-          hovertemplate: `<b>%{label}</b><br>Ponderación<br>%{text}<extra></extra>`,
+          hovertemplate: `<b>%{label}</b>%{text}<extra></extra>`,
         }
       ], 
       {
@@ -2585,7 +2561,8 @@
           blur: 10
         },
         uniformtext: {
-          minsize: 14   // Tamaño mínimo de fuente
+          mode: 'show',
+          minsize: 12   // Tamaño mínimo de fuente
         },
         barmode: 'overlay',
         yaxis: {
@@ -2721,7 +2698,7 @@
 
       // Call any functions that depend on this data
       //initializeAfterDataLoad();
-      console.log(datos, datos_pond, datos_numden, typeof datos);
+      //console.log(datos, datos_pond, datos_numden, typeof datos);
       console.log("Termina de preparar los datos. Comienza a graficar.");
       datosFiltrados = actualizarGrafica2(datos, unidad_deseada, fecha_deseada, desempeño);
       indicadores_d = actualizarGrafica3(datosFiltrados, desempeño); // devuelve lista de indicadores graficados.
@@ -2742,8 +2719,9 @@
       }); // remover estilo activo a todos.
       document.getElementById('loader-overlay').style.display = 'none';
       loader.classList.remove('show-loader');
-      console.log('Loader none')
+      //console.log('Loader none')
       // Inicializar calendario
+      
       console.log(fechas);
       updateYearDisplay();
       updateSelectedMonth();
@@ -3240,7 +3218,7 @@
       }
     });
     // Checar las disponibilidad del boton en header
-    console.log(fecha_deseada, fechas);
+    // console.log(fecha_deseada, fechas);
     if (fecha_deseada == fechas[fechas.length - 1]){
       document.getElementById('prev-month').disabled = false;
       document.getElementById('next-month').disabled = true;
@@ -3264,7 +3242,7 @@
     fecha_deseada = (`${meses[selectedMonth-1]} ${currentYear}`);//.toUpperCase();
 
     if (fecha_deseada == fechas[0]){
-      console.log('Es la primera fecha');
+      //console.log('Es la primera fecha');
       document.getElementById('prev-month').disabled = true;
       document.getElementById('next-month').disabled = false;
     } else{      
@@ -3315,7 +3293,7 @@
   console.log('Terminó una gráfica, empezando a comunicarse.');
   document.getElementById('loader-overlay').style.display = 'flex';
   loader.classList.add('show-loader');
-  console.log('Loader flex')
+  //console.log('Loader flex')
 
   // ---------- 8 -------------
   
@@ -3328,7 +3306,7 @@
     // Evento click
     btn.addEventListener("click", () => {
       unidad_completa = nombres_unidades.find(nombre => nombre.startsWith(unidad));
-      console.log(unidad_completa);
+      //console.log(unidad_completa);
       selector.value = unidad_completa;
       if (unidad_completa == 'UMAA Oaxaca'){
         document.getElementById('ranking_1N').hidden = true;
@@ -3378,7 +3356,7 @@
 
     btn.addEventListener("click", () => {
       unidad_completa = nombres_unidades.find(nombre => nombre.startsWith(unidad));
-      console.log(unidad_completa);
+      //console.log(unidad_completa);
       selector.value = unidad_completa;
       if (unidad_completa == 'HGSMF 41 Huatulco' || unidad_completa == 'HGZMF 02 Salina Cruz'){
         document.getElementById('ranking_1N').hidden = false;
@@ -3417,7 +3395,7 @@
       actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
       actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
       if (unidad_deseada == 'Oaxaca'){
-        console.log('Entramos a delegacional')
+        //console.log('Entramos a delegacional')
         actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
       }
       actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
@@ -3473,6 +3451,8 @@
     loader.classList.add('show-loader');
     var punto = data4.points[0];
     indicador_deseado = punto.x;
+    // console.log('click en:',punto);
+    // Actualizando Graficas
     actualizarGrafica4(datos, unidad_deseada, indicador_deseado, desempeño);
     actualizarGrafica5(datos, unidad_deseada, indicador_deseado, fecha_deseada);
   });
@@ -3513,15 +3493,60 @@
     }
   });
 
+  /*document.getElementById('ranking2-2').on('plotly_hover', function(dataEvent){
+    const grafica = document.getElementById('ranking2-2');
+    const point = dataEvent.points[0];
+    const g_indicador = point.x;
+    const pond_obt = point.y;
+
+    const graphEstimada = grafica.data.find(trace => trace.name === 'Pond. Estimada');
+    const labels = grafica._fullLayout.xaxis._categories;
+    const index = labels.indexOf(g_indicador);
+    const pond_est = graphEstimada.y[index];
+
+    console.log(g_indicador, pond_obt, pond_est);
+    const diff = pond_est - pond_obt;
+    if (diff === 0) return;
+
+    const isOver = pond_obt > pond_est;
+    const arrowText = isOver ? `▲ ${Math.abs(diff.toFixed(2))}` : `▼ ${Math.abs(diff.toFixed(2))}`;
+    const arrowColor = isOver ? 'green' : 'black';
+
+    const n_categories = labels.length;
+    const widht_column = 1/n_categories;
+
+    Plotly.relayout('ranking2-2', {
+      annotations: [{
+        xref: 'paper',
+        yref: 'y',
+        x: (index/n_categories)+(widht_column/2),
+        y: pond_obt,
+        ax: 0,
+        ay: -diff*8.5,
+        text: arrowText,
+        showarrow: true,
+        arrowhead: 1,
+        arrowcolor: arrowColor,
+        arrowsize: 1,
+        arrowwidht: 5,
+        arrowside: 'end+start',
+        font: {
+          color: arrowColor,
+          size: 14
+        },
+        xanchor: 'right',
+        yanchor: 'top',
+        width: 50,
+        borderpad: 10,
+        bgcolor: 'rgba(255,255,255,0.2)'
+      }]
+    });
+  });
+
+  document.getElementById('ranking2-2').on('plotly_unhover', function(){
+    Plotly.relayout('ranking2-2', { annotations: [] });
+  });*/
+
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
