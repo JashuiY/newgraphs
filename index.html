@@ -3414,6 +3414,9 @@
     actualizarRankingSN(datos_pond, fecha_deseada);
     actualizarRanking2_1(datos_pond, unidad_deseada, fecha_deseada);
     actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada);
+    if (unidad_deseada == 'Oaxaca'){
+      actualizarRanking2_3(datos_pond, unidad_deseada, fecha_deseada);
+    }
     updateActiveButton(unidad_deseada);
     actualizarGrafica5(datos, unidad_deseada, indicadores_d[0], fecha_deseada);
   });
@@ -3550,4 +3553,5 @@
   </script>
 </body>
 </html>
+
 
