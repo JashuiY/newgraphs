@@ -465,7 +465,7 @@
     </div>
 
     <div class="rank_unidad" id="rank_unidad_2">
-      <div class="rank_title" id="rank_title_2">2 Nivel</div>
+      <div class="rank_title" id="rank_title_2">Delegacional</div>
       <span id="rank_2">60.0</span>
     </div>
 
@@ -2299,6 +2299,7 @@
   }
 
   function actualizarRanking2_2(datos_pond, unidad_deseada, fecha_deseada){
+    document.getElementById('rank_title_2').innerHTML = '2 Nivel';
     if ((unidad_deseada == 'HGZ 03 Tuxtepec' | unidad_deseada == 'HGZ 01 Oaxaca' | unidad_deseada == 'HGZMF 02 Salina Cruz' | unidad_deseada == 'HGSMF 41 Huatulco')){
       document.getElementById('rank_unidad_2').hidden = false;
     }
@@ -2308,6 +2309,7 @@
     if (unidad_deseada == 'Oaxaca'){
       document.getElementById('rank_unidad_2').hidden = false;
       document.getElementById('rank_unidad_1').hidden = true;
+      document.getElementById('rank_title_2').innerHTML = 'Delegacional';
     }
 
     //document.getElementById('div_ranking2-2').hidden = false;
@@ -3553,5 +3555,6 @@
   </script>
 </body>
 </html>
+
 
 
