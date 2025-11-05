@@ -3131,7 +3131,7 @@
     ); // numden
 
   let currentYear = new Date().getFullYear();
-  let selectedMonth = ((new Date().getMonth() - 1) <= 0) ? 1:new Date().getMonth() - 1;
+  let selectedMonth = 6; //((new Date().getMonth() - 1) <= 0) ? 1:new Date().getMonth() - 1;
   mes_deseado = meses[selectedMonth-1];
   año_deseado = currentYear;
   fecha_deseada = mes_deseado.concat(' ', año_deseado);
@@ -3555,6 +3555,7 @@
   </script>
 </body>
 </html>
+
 
 
 
